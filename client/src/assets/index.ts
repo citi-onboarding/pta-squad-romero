@@ -1,3 +1,4 @@
 import LogoCITi from "./Logo.png";
+import LogoCITiPet from "./LogoCITiPet.png";
 
-export { LogoCITi };
+export { LogoCITi, LogoCITiPet };

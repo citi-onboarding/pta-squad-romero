@@ -1,33 +1,27 @@
-'use client'; // ESSENCIAL para usar useState no Next.js
-
+'use client'; 
+import { LogoCITiPet } from '@/assets';
 import React, { useState } from 'react';
+import Image from "next/image";
 
-// --- 1. INTERFACES ---
 
-interface ConsultationPayload {
+interface ConsultationModalState {
   consultationType: string;
   doctorId: string;
   date: string;
   time: string;
-}
-
-interface ConsultationModalState extends ConsultationPayload {
-  isLoading: boolean;
-  error: string | null;
+  error: string;
 }
 
 interface ConsultationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ConsultationPayload) => Promise<void>; 
+  onDataSubmit: (data: ConsultationModalState) => void; 
 }
-
-// --- 2. O COMPONENTE ---
 
 const ConsultationModal: React.FC<ConsultationModalProps> = ({ 
     isOpen, 
     onClose, 
-    onSubmit 
+    onDataSubmit
 }) => {
   
   const [state, setState] = useState<ConsultationModalState>({
@@ -35,11 +29,8 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     doctorId: '',
     date: '',
     time: '',
-    isLoading: false,
-    error: null,
+    error: ''
   });
-
-  // --- 3. HANDLERS ---
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -47,14 +38,13 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     setState(prevState => ({
       ...prevState,
       [name]: value,
-      error: null,
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação frontend (simples)
+    // Validação frontend
     if (!state.consultationType || !state.doctorId || !state.date || !state.time) {
         setState(prevState => ({
             ...prevState,
@@ -63,43 +53,39 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
         return;
     }
 
-    const { isLoading, error, ...payload } = state; 
-    
-    setState(prevState => ({ ...prevState, isLoading: true, error: null }));
+    const alertMessage = `Confirma os dados da consulta?\n
+    Tipo de consulta: ${state.consultationType}\n
+    Médico Responsável: ${state.doctorId}\n
+    Data do atendimento: ${state.date}\n
+    Horário do atendimento: ${state.time}`;
 
-    try {
-      await onSubmit(payload); 
-      // Se bem-sucedido, fechará o modal (assumindo que o Pai cuida disso)
-      
-    } catch (err: any) {
-      setState(prevState => ({
-        ...prevState,
-        error: err.message || 'Erro desconhecido ao salvar a consulta.'
-      }));
-    } finally {
-      setState(prevState => ({ ...prevState, isLoading: false }));
-    }
+    alert(alertMessage); 
+    
+
+    const { ...dataToSubmit } = state;
+
+    onDataSubmit(dataToSubmit); 
+    onClose(); 
   };
 
   if (!isOpen) return null;
 
-
-
   return (
-
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
       <div className="bg-white rounded-[24px] shadow-2xl p-[48px] w-full max-w-2xl">
         <header className="flex justify-between items-center mb-10">
-
-          <div className="text-xl font-bold text-[#4B0082]">
-            citi <span className="text-[#50E678]">🐾</span>
-          </div>
+          <div className="w-8"></div> 
+          <div className="flex-1 flex justify-center">
+        <Image 
+            src={LogoCITiPet} 
+            alt="Logo CITi Pet" 
+        />
+           </div>
           <button 
             onClick={onClose} 
-            className="text-gray-400 hover:text-gray-700 transition"
-          >
-            &times;
+            className="text-gray-500 hover:text-gray-800 transition p-2"
+              >
+              &times;
           </button>
         </header>
 
@@ -111,18 +97,18 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-10">
 
+            
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Tipo de consulta</label>
               <select
                 name="consultationType"
                 value={state.consultationType}
                 onChange={handleChange}
-
-                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none" // appearance-none para controlar a seta (opcional)
+                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none"
               >
                 <option value="">Selecione aqui</option>
                 <option value="rotina">Rotina</option>
-                <option value="emergencia">Emergência</option>
+                <option value="emergencia">Emergencia</option>
               </select>
             </div>
 
@@ -134,7 +120,6 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.doctorId}
                 onChange={handleChange}
                 placeholder="Digite aqui..."
-
                 className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
               />
             </div>
@@ -146,7 +131,6 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="date"
                 value={state.date}
                 onChange={handleChange}
-
                 className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
               />
             </div>
@@ -158,29 +142,17 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="time"
                 value={state.time}
                 onChange={handleChange}
-                
-                
                 className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
               />
             </div>
 
           </div>
-
-          {state.error && (
-            <p className="text-red-600 text-sm mb-6 p-2 bg-red-50 rounded-lg border border-red-200">
-              ⚠️ {state.error}
-            </p>
-          )}
-
           <button 
             type="submit" 
-            disabled={state.isLoading}
             className={`w-full py-3 text-white font-semibold rounded-[24px] transition duration-200 
-                        ${state.isLoading 
-                            ? 'bg-[#50E678] bg-opacity-60 cursor-not-allowed' 
-                            : 'bg-[#50E678] hover:bg-[#43C268]'}`}
+                        bg-[#50E678] hover:bg-[#43C268]`}
           >
-            {state.isLoading ? 'Salvando...' : 'Finalizar cadastro'}
+            Finalizar cadastro
           </button>
         </form>
 
