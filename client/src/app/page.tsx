@@ -1,17 +1,8 @@
-import AppointmentCard from '@/components/ui/card/historyCard';
-
 import Image from "next/image";
 
 import { LogoCITi } from "../assets";
 
 export default function Home() {
-  const appointment = {
-    appointmentDate: "18/02",
-    appointmentTime: "13:00",
-    doctorName: "Dr. José Carlos",
-    appointmentType: "Primeira Consulta"
-  }
-
   return (
     <div className="flex flex-1 flex-col h-full justify-around items-center bg-black">
       <div>
@@ -23,15 +14,6 @@ export default function Home() {
           Made with <strong>&lt; &#x0002F; &gt;</strong> and{" "}
           <strong>&hearts;</strong> by CITi
         </p>
-      </div>
-      {/* AppointmentCard */}
-      <div className="main-content-div">
-        <AppointmentCard
-          appointmentDate={appointment.appointmentDate}
-          appointmentTime={appointment.appointmentTime}
-          doctorName={appointment.doctorName}
-          appointmentType={appointment.appointmentType}
-        />
       </div>
     </div>
   );
