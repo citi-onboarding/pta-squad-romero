@@ -14,7 +14,7 @@ export default function AppointmentCard({
 
     return (
     <div>
-        <div className="flex flex-row w-[510px] h-[82px] rounded-[16px]
+        <div className="flex flex-col sm:flex-row w-full max-w-[510px] min-h-[82px] rounded-[16px]
          justify-between pt-[16px] pr-[24px] pl-[24px] pb-[16px]
           gap-[32px] bg-[#F0F0F0]">
             {/* Date and time box */}
