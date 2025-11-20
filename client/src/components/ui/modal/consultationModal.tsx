@@ -9,7 +9,6 @@ interface ConsultationModalState {
   doctorId: string;
   date: string;
   time: string;
-  error: string;
 }
 
 interface ConsultationModalProps {
@@ -17,6 +16,15 @@ interface ConsultationModalProps {
   onClose: () => void;
   onDataSubmit: (data: ConsultationModalState) => void; 
 }
+
+interface FormErrors {
+  consultationType?: string;
+  doctorId?: string;
+  date?: string;
+  time?: string;
+}
+
+type ValidationErrors = FormErrors;
 
 const ConsultationModal: React.FC<ConsultationModalProps> = ({ 
     isOpen, 
@@ -29,8 +37,9 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     doctorId: '',
     date: '',
     time: '',
-    error: ''
   });
+
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -39,17 +48,37 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
       ...prevState,
       [name]: value,
     }));
+
+    if (validationErrors[name as keyof ConsultationModalState]) {
+        setValidationErrors(prevErrors => {
+            const newErrors = { ...prevErrors };
+            delete newErrors[name as keyof ConsultationModalState];
+            return newErrors;
+        });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validação frontend
-    if (!state.consultationType || !state.doctorId || !state.date || !state.time) {
-        setState(prevState => ({
-            ...prevState,
-            error: 'Por favor, preencha todos os campos.',
-        }));
+    let errors: ValidationErrors = {};
+    
+    if (!state.consultationType) {
+        errors.consultationType = 'Selecione o tipo de consulta.';
+    }
+    if (!state.doctorId) {
+        errors.doctorId = 'Informe o médico responsável.';
+    }
+    if (!state.date) {
+        errors.date = 'Preencha a data do atendimento.';
+    }
+    if (!state.time) {
+        errors.time = 'Preencha o horário do atendimento.';
+    }
+
+    setValidationErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
         return;
     }
 
@@ -61,7 +90,6 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
     alert(alertMessage); 
     
-
     const { ...dataToSubmit } = state;
 
     onDataSubmit(dataToSubmit); 
@@ -69,6 +97,10 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
   };
 
   if (!isOpen) return null;
+  
+  const getErrorClass = (fieldName: keyof ConsultationModalState) => {
+    return validationErrors[fieldName] ? 'border-red-500' : 'border-gray-300';
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -76,14 +108,14 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
         <header className="flex justify-between items-center mb-10">
           <div className="w-8"></div> 
           <div className="flex-1 flex justify-center">
-        <Image 
-            src={LogoCITiPet} 
-            alt="Logo CITi Pet" 
-        />
+            <Image 
+                src={LogoCITiPet} 
+                alt="Logo CITi Pet" 
+            />
            </div>
           <button 
             onClick={onClose} 
-            className="text-gray-500 hover:text-gray-800 transition p-2"
+            className="text-gray-900 p-2 text-3xl mb-5"
               >
               &times;
           </button>
@@ -104,12 +136,16 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="consultationType"
                 value={state.consultationType}
                 onChange={handleChange}
-                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none"
+                className={`w-full py-3 px-4 border ${getErrorClass('consultationType')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none`}
               >
-                <option value="">Selecione aqui</option>
-                <option value="rotina">Rotina</option>
-                <option value="emergencia">Emergencia</option>
+                <option value="">Checkup</option>
+                <option value="vacinacao">Vacinação</option>
+                <option value="primeiraConsulta">Primeira Consulta</option>
+                <option value="retorno">Retorno</option>
               </select>
+              {validationErrors.consultationType && (
+                <p className="text-sm text-red-500 mt-1">{validationErrors.consultationType}</p>
+              )}
             </div>
 
             <div>
@@ -120,8 +156,11 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.doctorId}
                 onChange={handleChange}
                 placeholder="Digite aqui..."
-                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
+                className={`w-full py-3 px-4 border ${getErrorClass('doctorId')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
+              {validationErrors.doctorId && (
+                <p className="text-sm text-red-500 mt-1">{validationErrors.doctorId}</p>
+              )}
             </div>
 
             <div>
@@ -131,8 +170,11 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="date"
                 value={state.date}
                 onChange={handleChange}
-                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
+                className={`w-full py-3 px-4 border ${getErrorClass('date')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
+              {validationErrors.date && (
+                <p className="text-sm text-red-500 mt-1">{validationErrors.date}</p>
+              )}
             </div>
 
             <div>
@@ -142,8 +184,11 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="time"
                 value={state.time}
                 onChange={handleChange}
-                className="w-full py-3 px-4 border border-gray-300 rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150"
+                className={`w-full py-3 px-4 border ${getErrorClass('time')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
+              {validationErrors.time && (
+                <p className="text-sm text-red-500 mt-1">{validationErrors.time}</p>
+              )}
             </div>
 
           </div>
