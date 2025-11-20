@@ -2,11 +2,12 @@ import Image from "next/image";
 
 import { LogoCITi } from "../assets";
 import { RegisterModal } from '../components/ui/modal/RegisterModal';
+import { PetCard } from '../components/ui/card/petCard';
 
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col h-full justify-around items-center bg-black">
-      <RegisterModal />
+      <PetCard appointmentDate="18/02" appointmentTime="13:00" doctorName="Dr. José Carlos" AppointmentType="Check-up" petName="Luna" ownerName="João Alves" petSpecies="sheep" />
       <div>
         <Image src={LogoCITi} alt="Logo citi" />
       </div>
