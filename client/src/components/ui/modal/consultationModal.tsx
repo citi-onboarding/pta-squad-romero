@@ -139,7 +139,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     // Fundo escuro que cobre toda a tela e centraliza o modal
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       {/* Container principal do conteúdo do modal */}
-      <div className="bg-white rounded-[24px] shadow-2xl p-[48px] w-full max-w-2xl">
+      <div className="bg-white rounded-3xl shadow-2xl p-12 w-full max-w-2xl">
         <header className="flex justify-between items-center mb-10">
           {/* Div vazia para ajudar a centralizar a logo */}
           <div className="w-8"></div> 
@@ -179,7 +179,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.consultationType}
                 onChange={handleChange}
                 // Aplicação da classe de erro condicional
-                className={`w-full py-3 px-4 border ${getErrorClass('consultationType')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none`}
+                className={`w-full py-3 px-4 border ${getErrorClass('consultationType')} rounded-2xl focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none`}
               >
                 <option value="checkup">Checkup</option>
                 <option value="vacinacao">Vacinação</option>
@@ -202,7 +202,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 onChange={handleChange}
                 placeholder="Digite aqui..."
                 // Aplicação da classe de erro condicional
-                className={`w-full py-3 px-4 border ${getErrorClass('doctorName')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('doctorName')} rounded-2xl focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {/* Exibe a mensagem de erro específica */}
               {validationErrors.doctorName && (
@@ -219,7 +219,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.date}
                 onChange={handleChange}
                 // Aplicação da classe de erro condicional
-                className={`w-full py-3 px-4 border ${getErrorClass('date')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('date')} rounded-2xl focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {/* Exibe a mensagem de erro específica */}
               {validationErrors.date && (
@@ -236,7 +236,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.time}
                 onChange={handleChange}
                 // Aplicação da classe de erro condicional
-                className={`w-full py-3 px-4 border ${getErrorClass('time')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('time')} rounded-2xl focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {/* Exibe a mensagem de erro específica */}
               {validationErrors.time && (
@@ -248,7 +248,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
           {/* Botão de Finalizar Cadastro */}
           <button 
             type="submit" 
-            className={`w-full py-3 text-white font-semibold rounded-[24px] transition duration-200 
+            className={`w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
                         bg-[#50E678] hover:bg-[#43C268]`}
           >
             Finalizar cadastro
