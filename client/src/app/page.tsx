@@ -1,12 +1,10 @@
 import Image from "next/image";
 
 import { LogoCITi } from "../assets";
-import { RegisterModal } from '../components/ui/modal/RegisterModal';
 
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col h-full justify-around items-center bg-black">
-      <RegisterModal />
       <div>
         <Image src={LogoCITi} alt="Logo citi" />
       </div>
