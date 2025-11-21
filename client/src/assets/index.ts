@@ -1,3 +1,3 @@
 import LogoCITi from "./Logo.png";
-
-export { LogoCITi };
+import Arrow from "./arrow_back.png";
+export { LogoCITi, Arrow };
