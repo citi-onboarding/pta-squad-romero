@@ -1,4 +1,7 @@
 import LogoCITi from "./Logo.png";
+import LogoCITiPet from "./LogoCITiPet.png";
+
+export { LogoCITi, LogoCITiPet };
 import LogoPet from "./Logo CITi Pet.png"
 
 import dog from "./doggy.png"
