@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
-
+    
     const pathname = usePathname()
 
-  return (
+    return (
     <header className="flex flex-row items-center w-full justify-between py-5 px-12 border-b border-[#D9D9D9] bg-white">
       {/* Logo CITi */}
       <div>
@@ -135,7 +135,6 @@ export default function Header() {
         </defs>
         </svg>
       </div>
-
     </header>
   );
 }
