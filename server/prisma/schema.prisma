@@ -22,3 +22,42 @@ model Test {
   name String
   age  Int
 }
+
+enum appointmentTypes {
+  Checkup
+  Retorno
+  PrimeiraConsulta
+  Vacinacao
+}
+
+enum petSpecies {
+  Cachorro
+  Gato
+  Cavalo
+  Ovelha
+  Vaca
+  Porco
+}
+
+
+model Appointment{
+  id                 Int      @id @default(autoincrement())
+  appointmentType    appointmentTypes
+  appointmentDate    String
+  appointmentTime    String
+  doctorName         String
+  problemDescription String
+
+  petId              Int
+  pet                Pet      @relation(fields: [petId], references: [id])
+}
+
+model Pet{
+  id                 Int      @id @default(autoincrement())
+  petName            String
+  ownerName          String
+  petAge             Int
+  petSpecies         petSpecies
+
+  appointments       Appointment[]
+}
