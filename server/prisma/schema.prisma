@@ -36,7 +36,7 @@ enum petSpecies {
   Cavalo
   Ovelha
   Vaca
-  Pig
+  Porco
 }
 
 
