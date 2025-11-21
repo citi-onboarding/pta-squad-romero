@@ -9,9 +9,9 @@ import pig from "./pig.png"
 import clock from "./alarm.png"
 export { LogoCITi };
 export { LogoPet};
-export { dog };
+export { dog }; //trocar o cachorro
 export { sheep };
-export { horse };
+export { horse }; 
 export { cow };
 export { cat };
 export { pig };
