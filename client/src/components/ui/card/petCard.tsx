@@ -25,7 +25,7 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, Appointme
             return dog;
         case "pig":
             return pig;
-        default: 
+        default:
             return cat;
             }
         };
@@ -47,14 +47,14 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, Appointme
     
     const backgroundColor = background(AppointmentType);
     return(
-    <div className={`w-[494.67px] h-[135px] flex justify-between rounded-2xl pt-[16px] pb-[16px] pl-[24px] pr-[24px] ${backgroundColor} items-center`}>
+    <div className={`w-[494.67px] h-[135px] flex justify-between rounded-2xl py[16px] pl-[24px] pr-[24px] ${backgroundColor} items-center`}> 
         <div className="flex flex-col gap-2 bg-white bg-opacity-80 pt-[12px] pb-[12px] pl-[6px] pr-[6px] items-center justify-center rounded-sm">
-            <Image src={clock} alt="clock" className="w-5 h-5" />
+            <Image src={clock} alt="clock" className="w-5 h-5" />  {/* Ajustar os px e pts, além de comentar */}
             <p className="font-bold text-sm text-center">{appointmentDate}</p>
             <p className="font-bold text-sm text-center">{appointmentTime}</p>
         </div>
         <p className="text-sm text-center"><span className="font-bold">{petName}</span> / {ownerName}</p>
-        <p className="text-sm text-center">{doctorName}</p>
+        <p className="text-sm text-center">{doctorName}</p> {/* Trabalhar encima da responsividade do tamanho da  */}
         <div className="gap-2 flex flex-col items-center">
             <Image src={species(petSpecies)} alt="animal" className="w-[69px] h-[70px]" />
             <div className="rounded-sm p-[6px] gap-2 bg-white bg-opacity-80">
