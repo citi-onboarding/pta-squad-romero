@@ -1,4 +1,4 @@
-import { dog, sheep, horse, cow, cat, pig, clock} from "../../../assets"
+import { dog, sheep, horse, cow, cat, pig, clock} from "../../assets"
 import Image from "next/image";
 type Props = {
   appointmentDate : string,
