@@ -7,8 +7,8 @@ import {
 import React, { useRef } from 'react';
 import { Input } from "@/components/ui/input"
 import Image from "next/image";
-import { Button } from "../button"
-import { LogoPet } from "../../../assets"
+import { Button } from "../ui/button"
+import { LogoPet } from "../../assets"
 
 export function RegisterModal() {
   const emailRef : any = useRef(); // By using ref, it gets the text inputed on the email field and tranfers it to the alert msg
