@@ -6,9 +6,9 @@ import Image from "next/image";
 
 interface ConsultationModalState {
   consultationType: string;
-  doctorId: string;
+  doctorId: string; // Mudar os valores para o mesmo nome do banco de dados
   date: string;
-  time: string;
+  time: string; 
 }
 
 interface ConsultationModalProps {
@@ -104,7 +104,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-[24px] shadow-2xl p-[48px] w-full max-w-2xl">
+      <div className="bg-white rounded-6 shadow-2xl p-12 w-full max-w-2xl">
         <header className="flex justify-between items-center mb-10">
           <div className="w-8"></div> 
           <div className="flex-1 flex justify-center">
@@ -138,7 +138,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 onChange={handleChange}
                 className={`w-full py-3 px-4 border ${getErrorClass('consultationType')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150 appearance-none`}
               >
-                <option value="">Checkup</option>
+                <option value="checkup">Checkup</option>
                 <option value="vacinacao">Vacinação</option>
                 <option value="primeiraConsulta">Primeira Consulta</option>
                 <option value="retorno">Retorno</option>
@@ -156,7 +156,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 value={state.doctorId}
                 onChange={handleChange}
                 placeholder="Digite aqui..."
-                className={`w-full py-3 px-4 border ${getErrorClass('doctorId')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('doctorId')} rounded-4 focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {validationErrors.doctorId && (
                 <p className="text-sm text-red-500 mt-1">{validationErrors.doctorId}</p>
@@ -170,7 +170,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="date"
                 value={state.date}
                 onChange={handleChange}
-                className={`w-full py-3 px-4 border ${getErrorClass('date')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('date')} rounded-4 focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {validationErrors.date && (
                 <p className="text-sm text-red-500 mt-1">{validationErrors.date}</p>
@@ -184,7 +184,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 name="time"
                 value={state.time}
                 onChange={handleChange}
-                className={`w-full py-3 px-4 border ${getErrorClass('time')} rounded-[16px] focus:ring-green-500 focus:border-green-500 transition duration-150`}
+                className={`w-full py-3 px-4 border ${getErrorClass('time')} rounded-4 focus:ring-green-500 focus:border-green-500 transition duration-150`}
               />
               {validationErrors.time && (
                 <p className="text-sm text-red-500 mt-1">{validationErrors.time}</p>
@@ -194,7 +194,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
           </div>
           <button 
             type="submit" 
-            className={`w-full py-3 text-white font-semibold rounded-[24px] transition duration-200 
+            className={`w-full py-3 text-white font-semibold rounded-6 transition duration-200 
                         bg-[#50E678] hover:bg-[#43C268]`}
           >
             Finalizar cadastro
