@@ -1,5 +1,6 @@
 import LogoCITi from "./Logo.png";
 import LogoPet from "./Logo CITi Pet.png"
+
 import dog from "./doggy.png"
 import sheep from "./sheep.svg"
 import horse from "./horse.svg"
@@ -16,3 +17,4 @@ export { cow };
 export { cat };
 export { pig };
 export { clock };
+
