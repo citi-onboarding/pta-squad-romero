@@ -22,7 +22,7 @@ export function RegisterModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-[205px] h-12 rounded-3xl bg-[#50E678] shadow-md border border-input inline-flex items-center justify-center font-medium transition-colors hover:bg-[#43C268]">
+        <button className="w-[205px] h-12 rounded-3xl bg-[#50E678] shadow-md border border-input inline-flex items-center justify-center text-white font-medium transition-colors hover:bg-[#43C268]">
           Finalizar Cadastro
         </button>
       </DialogTrigger>

@@ -7,18 +7,8 @@ import HistoryCard from "../ui/card/historyCard"
 import { useState } from "react"
 
 export default function componentsTest(){
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalOpen2, setIsModalOpen2] = useState(false);
-    
-    const handleDataSubmit = (data: any) => {
-        console.log('Data submitted:', data);
-        setIsModalOpen(false);
-    };
-    
-    const handleDataSubmit2 = (data: any) => {
-        console.log('Data submitted:', data);
-        setIsModalOpen2(false);
-    };
+    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen2, setIsModalOpen2] = useState(true);
     
     return(
         <div className="min-h-screen flex flex-col bg-gray-50">
@@ -26,14 +16,14 @@ export default function componentsTest(){
             <Header />
             
             {/* Main content with 3 equal sections */}
-            <div className="flex-1 flex flex-row">
+            <div className="flex-1 flex flex-row overflow-hidden">
                 {/* Left Section - Tela Atendimento */}
-                <div className="flex-1 p-6 border-r border-gray-300">
+                <div className="flex-1 p-6 border-r border-gray-300 overflow-y-auto">
                     <h2 className="text-2xl font-bold mb-6">Tela Atendimento</h2>
                     <div className="flex flex-col gap-6">
                         {/* 6 Pet Cards with different animals and appointment types */}
                         <PetCard 
-                            appointmentDate="21/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="09:00"
                             doctorName="Dr. João Silva"
                             AppointmentType="Primeira Consulta"
@@ -42,7 +32,7 @@ export default function componentsTest(){
                             ownerName="Maria Santos"
                         />
                         <PetCard 
-                            appointmentDate="21/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="10:30"
                             doctorName="Dra. Ana Costa"
                             AppointmentType="Vacinação"
@@ -51,7 +41,7 @@ export default function componentsTest(){
                             ownerName="Pedro Lima"
                         />
                         <PetCard 
-                            appointmentDate="21/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="14:00"
                             doctorName="Dr. Carlos Souza"
                             AppointmentType="Retorno"
@@ -60,7 +50,7 @@ export default function componentsTest(){
                             ownerName="José Oliveira"
                         />
                         <PetCard 
-                            appointmentDate="21/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="15:30"
                             doctorName="Dra. Beatriz Alves"
                             AppointmentType="Check-up"
@@ -69,7 +59,7 @@ export default function componentsTest(){
                             ownerName="Fernando Rocha"
                         />
                         <PetCard 
-                            appointmentDate="22/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="09:30"
                             doctorName="Dr. Ricardo Mendes"
                             AppointmentType="Primeira Consulta"
@@ -78,7 +68,7 @@ export default function componentsTest(){
                             ownerName="Carla Dias"
                         />
                         <PetCard 
-                            appointmentDate="22/11/2025"
+                            appointmentDate="11/2025"
                             appointmentTime="11:00"
                             doctorName="Dra. Lucia Fernandes"
                             AppointmentType="Vacinação"
@@ -89,29 +79,23 @@ export default function componentsTest(){
                         
                         {/* Appointment Modal */}
                         <div className="mt-6">
-                            <button 
-                                onClick={() => setIsModalOpen(true)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded"
-                            >
-                                Abrir Modal de Consulta
-                            </button>
                             <ConsultationModal 
                                 isOpen={isModalOpen}
                                 onClose={() => setIsModalOpen(false)}
-                                onDataSubmit={handleDataSubmit}
+                                onDataSubmit={(data) => { console.log("Data submitted:", data); setIsModalOpen(false); }}
                             />
                         </div>
                     </div>
                 </div>
 
                 {/* Middle Section - Tela Cadastro */}
-                <div className="flex-1 p-6 border-r border-gray-300 flex flex-col items-center">
+                <div className="flex-1 p-6 border-r border-gray-300 flex flex-col items-center overflow-y-auto">
                     <h2 className="text-2xl font-bold mb-6">Tela Cadastro</h2>
                     <RegisterModal />
                 </div>
 
                 {/* Right Section - Tela Detalhamento */}
-                <div className="flex-1 p-6">
+                <div className="flex-1 p-6 overflow-y-auto">
                     <h2 className="text-2xl font-bold mb-6">Tela Detalhamento</h2>
                     <div className="flex flex-col gap-6">
                         {/* 5 History Cards */}
@@ -148,16 +132,10 @@ export default function componentsTest(){
                         
                         {/* Appointment Modal */}
                         <div className="mt-6">
-                            <button 
-                                onClick={() => setIsModalOpen2(true)}
-                                className="bg-blue-500 text-white px-4 py-2 rounded"
-                            >
-                                Abrir Modal de Consulta
-                            </button>
                             <ConsultationModal 
                                 isOpen={isModalOpen2}
                                 onClose={() => setIsModalOpen2(false)}
-                                onDataSubmit={handleDataSubmit2}
+                                onDataSubmit={(data) => { console.log("Data submitted:", data); setIsModalOpen2(false); }}
                             />
                         </div>
                     </div>
