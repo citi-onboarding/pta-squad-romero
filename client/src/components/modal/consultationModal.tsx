@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 
 // Importações de assets (logotipo).
-import { LogoPetConsultationModal } from '@/assets'; 
+import { LogoPet } from '@/assets'; 
 
 /**
  * Define a estrutura de dados (tipagem) esperada dos campos do formulário.
@@ -125,7 +125,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
         <header className="mb-8 mt-2">
           <div className="flex justify-center">
             <Image 
-                src={LogoPetConsultationModal} 
+                src={LogoPet} 
                 alt="Logo CITi Pet" 
             />
           </div>
