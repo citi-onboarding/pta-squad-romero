@@ -112,17 +112,16 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
       <DialogContent 
         className="
           bg-white 
-          w-[90vw] max-w-2xl 
-          p-6 md:p-12 
+          w-full max-w-2xl 
+          p-12 
           h-auto 
-          rounded-[24px] shadow-2xl 
+          rounded-3xl shadow-2xl 
           border-none
-          border-radiues-[24px]
         "
       >
         
         {/* Cabeçalho do Modal: Logo centralizada */}
-        <header className="mb-8 mt-2">
+        <header className="mb-10">
           <div className="flex justify-center">
             <Image 
                 src={LogoPet} 
@@ -132,7 +131,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
         </header>
 
         {/* Mensagem de instrução */}
-        <p className="text-center text-base text-gray-800 mb-8 px-0 md:px-6">
+        <p className="text-center text-base text-gray-800 mb-10">
           <b>O pet já está cadastrado no sistema!</b> Preencha os dados da <b>consulta</b>:
         </p>
 

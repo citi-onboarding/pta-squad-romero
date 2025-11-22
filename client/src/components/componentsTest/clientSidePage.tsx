@@ -1,14 +1,13 @@
 'use client'
 import { RegisterModal } from "../modal/RegisterModal" 
-import ConsultationModal from "../modal/consultationModal"
 import { PetCard } from "../card/petCard"
 import Header from "../header/header"
-import HistoryCard from "../ui/card/historyCard"
-import { useState } from "react"
+import HistoryCard from "../card/historyCard"
+import ConsultationModal from "../modal/consultationModal"
+import { Button } from "../ui/button"
 
 export default function componentsTest(){
-    const [isModalOpen, setIsModalOpen] = useState(true);
-    const [isModalOpen2, setIsModalOpen2] = useState(true);
+  
     
     return(
         <div className="min-h-screen flex flex-col bg-gray-50">
@@ -79,11 +78,11 @@ export default function componentsTest(){
                         
                         {/* Appointment Modal */}
                         <div className="mt-6">
-                            <ConsultationModal 
-                                isOpen={isModalOpen}
-                                onClose={() => setIsModalOpen(false)}
-                                onDataSubmit={(data) => { console.log("Data submitted:", data); setIsModalOpen(false); }}
-                            />
+                            <ConsultationModal>
+                                <Button className="w-[205px] h-[48px] rounded-[24px] py-3 px-8 bg-[#50E678] hover:bg-[#43C268] text-white font-bold shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1)]">
+                                    Nova Consulta
+                                </Button>
+                            </ConsultationModal>
                         </div>
                     </div>
                 </div>
@@ -132,11 +131,11 @@ export default function componentsTest(){
                         
                         {/* Appointment Modal */}
                         <div className="mt-6">
-                            <ConsultationModal 
-                                isOpen={isModalOpen2}
-                                onClose={() => setIsModalOpen2(false)}
-                                onDataSubmit={(data) => { console.log("Data submitted:", data); setIsModalOpen2(false); }}
-                            />
+                            <ConsultationModal>
+                                <Button className="w-[205px] h-[48px] rounded-[24px] py-3 px-8 bg-[#50E678] hover:bg-[#43C268] text-white font-bold shadow-[0px_4px_4px_0px_rgba(0,0,0,0.1)]">
+                                    Nova Consulta
+                                </Button>
+                            </ConsultationModal>
                         </div>
                     </div>
                 </div>
