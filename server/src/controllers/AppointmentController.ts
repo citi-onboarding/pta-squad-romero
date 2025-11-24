@@ -19,10 +19,8 @@ class AppointmentController implements Crud {
   // Inicializa o serviço Citi com o nome do modelo no Prisma: "Appointment"
   constructor(private readonly citi = new Citi("Appointment")) {}
 
-  /**
-   * POST /appointments
-   * Cria um novo agendamento.
-   */
+    // POST /appointments
+    // Cria um novo agendamento
   create = async (request: Request, response: Response): Promise<Response> => {
     // Campos extraídos do body, usando os nomes do modelo Prisma
     const { 
@@ -66,10 +64,7 @@ class AppointmentController implements Crud {
     return response.status(httpStatus).send({ message });
   };
 
-  /**
-   * GET /appointments
-   * Lista todos os agendamentos.
-   */
+  // GET /appointments
   get = async (request: Request, response: Response): Promise<Response> => {
     // Obtém todos os valores via Citi
     const { httpStatus, values } = await this.citi.getAll();
@@ -77,11 +72,9 @@ class AppointmentController implements Crud {
     return response.status(httpStatus).send(values);
   };
   
-  /**
-   * GET /appointments/:id
-   * Busca um agendamento específico por ID.
-   */
-  show = async (request: Request, response: Response): Promise<Response> => {
+  // GET /appointments/:id
+  // Obtém um agendamento pelo ID
+  getById = async (request: Request, response: Response): Promise<Response> => {
       const { id } = request.params;
       
       // Busca pelo ID via Citi
@@ -91,10 +84,7 @@ class AppointmentController implements Crud {
       return response.status(httpStatus).send(value);
   }
 
-  /**
-   * DELETE /appointments/:id
-   * Remove um agendamento.
-   */
+  // DELETE /appointments/:id
   delete = async (request: Request, response: Response): Promise<Response> => {
     const { id } = request.params;
     
@@ -104,17 +94,15 @@ class AppointmentController implements Crud {
     return response.status(httpStatus).send({ messageFromDelete });
   };
 
-  /**
-   * PUT /appointments/:id
-   * Atualiza os dados de um agendamento existente.
-   */
+  // PUT /appointments/:id
+  // Atualiza um agendamento pelo ID
   update = async (request: Request, response: Response): Promise<Response> => {
     const { id } = request.params;
     // Valores a serem atualizados 
     const { appointmentType, appointmentDate, appointmentTime, doctorName, problemDescription, petId } = request.body;
 
     const updated = { appointmentType, appointmentDate, appointmentTime, doctorName, problemDescription, petId };
-    const { httpStatus, messageFromUpdate } = await this.citi.updateValue( id, updated );
+    const { httpStatus, messageFromUpdate } = await this.citi.updateValue(id, updated);
 
     return response.status(httpStatus).send({ messageFromUpdate });
   };

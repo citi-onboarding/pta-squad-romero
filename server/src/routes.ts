@@ -11,7 +11,7 @@ routes.patch("/user/:id", userController.update);
 
 routes.post("/appointments", appointmentController.create);
 routes.get("/appointments", appointmentController.get);
-routes.get("/appointments/:id", appointmentController.show);
+routes.get("/appointments/:id", appointmentController.getById);
 routes.delete("/appointments/:id", appointmentController.delete);
 routes.put("/appointments/:id", appointmentController.update);
 
