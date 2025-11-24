@@ -12,7 +12,7 @@ routes.patch("/user/:id", userController.update);
 // Pet routes
 routes.post("/pet", petController.create);
 routes.get("/pet", petController.get);
-routes.get("/pet", petController.findPetId);
+routes.get("/pet/:id", petController.findPetId);
 routes.delete("/pet", petController.delete);
 routes.patch("/pet", petController.uptade);
 
