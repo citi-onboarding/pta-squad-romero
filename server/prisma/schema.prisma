@@ -22,3 +22,13 @@ model Test {
   name String
   age  Int
 }
+
+model Pet {
+  id Int @id @default(autoincrement())
+  name String
+  type String
+  age Int
+  owner String
+}
+
+
