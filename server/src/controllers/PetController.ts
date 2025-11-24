@@ -50,7 +50,7 @@ class PetController implements Crud {
     }
 
     // Uptade the data of pet
-    uptade = async (request: Request, response: Response) => {
+    update = async (request: Request, response: Response) => {
         const {id} = request.params;
         const {name, type, age, owner} = request.body;
 

@@ -13,7 +13,7 @@ routes.patch("/user/:id", userController.update);
 routes.post("/pet", petController.create);
 routes.get("/pet", petController.get);
 routes.get("/pet/:id", petController.findPetId);
-routes.delete("/pet", petController.delete);
-routes.patch("/pet", petController.uptade);
+routes.delete("/pet/:id", petController.delete);
+routes.patch("/pet/:id", petController.update);
 
 export default routes;
