@@ -2,10 +2,10 @@ import { Request, Response } from "express";
 import { Citi, Crud } from "../global"; 
 import { Prisma, appointmentTypes } from '@prisma/client';
 
-// Define o tipo de entrada exato que o Prisma espera para a criação
+// Define o tipo de entrada que o Prisma espera para a criação
 type AppointmentCreateInput = Prisma.AppointmentCreateInput;
 
-// Tipagem para os dados de Appointment (body da requisição)
+// Tipagem para os dados de Appointment
 interface AppointmentBody {
   appointmentType: appointmentTypes;
   appointmentDate: string;
@@ -24,7 +24,7 @@ class AppointmentController implements Crud {
    * Cria um novo agendamento.
    */
   create = async (request: Request, response: Response): Promise<Response> => {
-    // Campos extraídos do body, usando os nomes EXATOS do modelo Prisma
+    // Campos extraídos do body, usando os nomes do modelo Prisma
     const { 
       appointmentType, 
       appointmentDate, 
@@ -34,7 +34,7 @@ class AppointmentController implements Crud {
       petId 
     } = request.body as AppointmentBody;
 
-    // Validação usando o utilitário Citi para campos obrigatórios
+    // Validação usando o Citi para campos obrigatórios
     const isAnyUndefined = this.citi.areValuesUndefined(
       appointmentType,
       appointmentDate,
@@ -50,7 +50,7 @@ class AppointmentController implements Crud {
     }
 
     // Objeto a ser inserido no banco de dados (deve coincidir com o modelo Prisma)
-    const newAppointment: AppointmentCreateInput ={ 
+    const newAppointment: AppointmentCreateInput = { 
         appointmentType, 
         appointmentDate, 
         appointmentTime, 
@@ -62,13 +62,13 @@ class AppointmentController implements Crud {
 
     // Insere no banco via Citi
     const { httpStatus, message } = await this.citi.insertIntoDatabase(newAppointment);
-
+    // Mensagem de sucesso ou erro 
     return response.status(httpStatus).send({ message });
   };
 
   /**
    * GET /appointments
-   * Lista todos os agendamentos. (FindAll)
+   * Lista todos os agendamentos.
    */
   get = async (request: Request, response: Response): Promise<Response> => {
     // Obtém todos os valores via Citi
@@ -79,8 +79,7 @@ class AppointmentController implements Crud {
   
   /**
    * GET /appointments/:id
-   * Busca um agendamento específico por ID. (FindAppointmentById / show)
-   * Nota: O método `Citi.findById` espera o ID no formato que o Prisma usa (número).
+   * Busca um agendamento específico por ID.
    */
   show = async (request: Request, response: Response): Promise<Response> => {
       const { id } = request.params;
@@ -111,13 +110,11 @@ class AppointmentController implements Crud {
    */
   update = async (request: Request, response: Response): Promise<Response> => {
     const { id } = request.params;
-    const updates = request.body; // Valores a serem atualizados (parcialmente)
+    // Valores a serem atualizados 
+    const { appointmentType, appointmentDate, appointmentTime, doctorName, problemDescription, petId } = request.body;
 
-    // Atualiza o valor via Citi
-    const { httpStatus, messageFromUpdate } = await this.citi.updateValue(
-      id,
-      updates
-    );
+    const updated = { appointmentType, appointmentDate, appointmentTime, doctorName, problemDescription, petId };
+    const { httpStatus, messageFromUpdate } = await this.citi.updateValue( id, updated );
 
     return response.status(httpStatus).send({ messageFromUpdate });
   };
