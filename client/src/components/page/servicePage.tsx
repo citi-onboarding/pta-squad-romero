@@ -153,6 +153,8 @@ const parseDate = (dateString: string) => {
 export default function ServicePage() {
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [searchText, setSearchText] = useState(""); 
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   // Data de hoje
   const today = new Date();
@@ -170,7 +172,7 @@ export default function ServicePage() {
     }
   });
 
-  const appointmentsToShow = filteredAppointments.filter(appointment => {
+  const dateFilteredAppointments = filteredAppointments.filter(appointment => {
     // Se não há filtro de data, retorna tudo
     if (!dateRange || !dateRange.from) {
       return true; 
@@ -189,6 +191,17 @@ export default function ServicePage() {
 
     return isAfterStart && isBeforeEnd;
   });
+
+const normalizedSearchText = appliedSearch.toLowerCase().trim();
+
+const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
+  if (!normalizedSearchText) {
+    return true; 
+  }
+  const doctorMatch = appointment.doctor.toLowerCase().includes(normalizedSearchText);
+
+  return doctorMatch
+});
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-white">
@@ -210,9 +223,13 @@ export default function ServicePage() {
                 type="text"
                 className="p-2 border border-black rounded-lg flex-grow max-w-sm"
                 placeholder="Pesquise aqui..."
+                value={searchText} 
+                onChange={(e) => setSearchText(e.target.value)} 
               />
 
-              <Button className="py-3 px-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-3xl shadow-md">
+              <Button 
+              onClick={() => setAppliedSearch(searchText)}
+              className="py-3 px-8 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-3xl shadow-md">
                 Buscar
               </Button>
             </div>
