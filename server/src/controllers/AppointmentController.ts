@@ -2,27 +2,12 @@ import { Request, Response } from "express";
 import { Citi, Crud } from "../global"; 
 import { Prisma, appointmentTypes } from '@prisma/client';
 
-// Define o tipo de entrada que o Prisma espera para a criação
-type AppointmentCreateInput = Prisma.AppointmentCreateInput;
-
-// Tipagem para os dados de Appointment
-interface AppointmentBody {
-  appointmentType: appointmentTypes;
-  appointmentDate: string;
-  appointmentTime: string;
-  doctorName: string;
-  problemDescription: string;
-  petId: number; 
-}
-
 class AppointmentController implements Crud {
-  // Inicializa o serviço Citi com o nome do modelo no Prisma: "Appointment"
   constructor(private readonly citi = new Citi("Appointment")) {}
 
     // POST /appointments
     // Cria um novo agendamento
   create = async (request: Request, response: Response): Promise<Response> => {
-    // Campos extraídos do body, usando os nomes do modelo Prisma
     const { 
       appointmentType, 
       appointmentDate, 
@@ -30,7 +15,7 @@ class AppointmentController implements Crud {
       doctorName, 
       problemDescription, 
       petId 
-    } = request.body as AppointmentBody;
+    } = request.body;
 
     // Validação usando o Citi para campos obrigatórios
     const isAnyUndefined = this.citi.areValuesUndefined(
@@ -48,7 +33,7 @@ class AppointmentController implements Crud {
     }
 
     // Objeto a ser inserido no banco de dados (deve coincidir com o modelo Prisma)
-    const newAppointment: AppointmentCreateInput = { 
+    const newAppointment = { 
         appointmentType, 
         appointmentDate, 
         appointmentTime, 
