@@ -30,7 +30,7 @@ enum appointmentTypes {
   Vacinacao
 }
 
-enum petSpecies {
+enum PetSpecies {
   Cachorro
   Gato
   Cavalo
@@ -57,7 +57,7 @@ model Pet{
   petName            String
   ownerName          String
   petAge             Int
-  petSpecies         petSpecies
+  petSpecies         PetSpecies
 
-  appointments       Appointment[]
+  appointments       Appointment?
 }
