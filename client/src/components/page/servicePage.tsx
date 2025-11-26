@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker"; 
+import Link from "next/link";
 
 
 const activeAppointmentsMock = [
@@ -28,7 +29,7 @@ const activeAppointmentsMock = [
     id: 2,
     date: "27/11", 
     time: "14:00",
-    doctor: "Dr. José Carlos",
+    doctor: "Dr. Romero",
     type: "Check-up",
     species: "cat",
     name: "Luna",
@@ -243,7 +244,7 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
                   className={`
                     ${
                       activeTab === "active"
-                        ? "bg-gray-300 text-black font-semibold shadow-md"
+                        ? "bg-gray-300 text-black font-semibold shadow-md hover:bg-gray-400"
                         : "bg-transparent text-gray-600 hover:bg-gray-200"
                     }
                     rounded-lg px-6 py-2 transition-all duration-150
@@ -256,7 +257,7 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
                   className={`
                     ${
                       activeTab === "history"
-                        ? "bg-gray-300 text-black font-semibold shadow-md"
+                        ? "bg-gray-300 text-black font-semibold shadow-md hover:bg-gray-400"
                         : "bg-transparent text-gray-600 hover:bg-gray-200"
                     }
                     rounded-lg px-6 py-2 transition-all duration-150
@@ -290,7 +291,7 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2} //mostra dois meses
+                    numberOfMonths={1} //mostra um mes
                   />
                 </PopoverContent>
               </Popover>
@@ -317,7 +318,7 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2}
+                    numberOfMonths={1}
                   />
                 </PopoverContent>
               </Popover>
@@ -336,14 +337,15 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
           </div>
 
         </div>
-        <div className="max-w-screen-2xl mx-auto w-full px-8 grid lg:grid-cols-3 md:grid-cols-2 gap-6 mb-12">
+        <div className="max-w-screen-2xl mx-auto w-full pl-8 grid lg:grid-cols-3 grid-cols-2 gap-12 mb-12">
           {appointmentsToShow.length > 0 ? (
             appointmentsToShow.map((appointment) => {
               // Calcula o status para passar ao PetCard
               const appointmentStatus = 
                 parseDate(appointment.date).setHours(0, 0, 0, 0) >= today.getTime() ? "present" : "past";
               
-              return (
+              return ( 
+                // Add Link
                 <PetCard
                   key={appointment.id}
                   appointmentDate={appointment.date}
