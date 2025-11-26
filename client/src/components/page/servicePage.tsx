@@ -7,7 +7,7 @@ import { Button } from "../ui/button";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar"; 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils"; // Certifique-se de que este utilitário existe
+import { cn } from "@/lib/utils"; 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker"; 
@@ -339,7 +339,7 @@ const appointmentsToShow = dateFilteredAppointments.filter(appointment => {
         <div className="max-w-screen-2xl mx-auto w-full px-8 grid lg:grid-cols-3 md:grid-cols-2 gap-6 mb-12">
           {appointmentsToShow.length > 0 ? (
             appointmentsToShow.map((appointment) => {
-              // Calcula o status dinamicamente para passar ao PetCard
+              // Calcula o status para passar ao PetCard
               const appointmentStatus = 
                 parseDate(appointment.date).setHours(0, 0, 0, 0) >= today.getTime() ? "present" : "past";
               
