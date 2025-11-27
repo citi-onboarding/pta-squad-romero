@@ -23,7 +23,7 @@ model Test {
   age  Int
 }
 
-enum appointmentTypes {
+enum AppointmentTypes {
   Checkup
   Retorno
   PrimeiraConsulta
@@ -42,7 +42,7 @@ enum PetSpecies {
 
 model Appointment{
   id                 Int      @id @default(autoincrement())
-  appointmentType    appointmentTypes
+  appointmentType    AppointmentTypes
   appointmentDate    String
   appointmentTime    String
   doctorName         String
