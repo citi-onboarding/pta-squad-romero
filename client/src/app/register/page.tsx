@@ -1,80 +1,157 @@
 'use client'
 import React from 'react';
 import Header from "@/components/header/header";
-import { Input } from "@/components/ui/input";
-import { Form, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { RegisterModal } from '@/components/modal/RegisterModal';
+import { useRouter } from 'next/navigation';
+// Images
+import Image from 'next/image';
+import ovelhaImg from '../../../src/assets/sheep.svg';
+import gatoImg from '../../../src/assets/cat.svg';
+import cavaloImg from '../../../src/assets/horse.svg';
+import porcoImg from '../../../src/assets/pig.svg';
+import vacaImg from '../../../src/assets/cow.svg';
+import cachorroImg from '../../../src/assets/doggy.png';
+import Arrow from '@/assets/arrow_back_new.svg'
+
+const animalOptions = [
+    { value: "Ovelha", label: "Ovelha", img: ovelhaImg },
+    { value: "Gato", label: "Gato", img: gatoImg},
+    { value: "Porco", label: "Porco", img: porcoImg },
+    { value: "Vaca", label: "Vaca", img: vacaImg },
+    { value: "Cavalo", label: "Cavalo", img: cavaloImg },
+    { value: "Cachorro", label: "Cachorro", img: cachorroImg },
+];
 
 export default function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    
-    const onSubmit = (data : any) => {
-        console.log(data);
+    const router = useRouter();
+
+    const [setIsModalOpen] = React.useState(false); // Control register modal state
+    const [formData, setFormData] = React.useState(null); // Store form data temporarily
+    const hiddenModalTriggerRef = React.useRef<HTMLDivElement>(null); // Ref to hidden modal trigger button
+
+    const onSubmit = (data : any) => { // Alert message
+        const alertMessage = ` 
+        📋 RESUMO DO CADASTRO:
+        🐾 PACIENTE
+        Nome: ${data.petName}
+        Espécie: ${data.petSpecies}
+        Idade: ${data.petAge}
+        👤 TUTOR
+        Nome: ${data.ownerName}
+        🏥 CONSULTA
+        Tipo: ${data.appointmentType}
+        Médico: ${data.doctorName}
+        Data: ${data.appointmentDate} às ${data.appointmentTime}
+        📝 PROBLEMA
+        ${data.problemDescription}
+                `;
+
+        // 1. Mostra o alerta formatado
+        alert(alertMessage);
+        // If form is valid, open modal and store data
+        setFormData(data); // Store data 
+        if (hiddenModalTriggerRef.current) {
+            const modalButton = hiddenModalTriggerRef.current.querySelector('button');
+            if (modalButton) {
+                modalButton.click(); // Open real modal
+            }
+        }
     };
 
     return(
         <>
             <Header />
-            <h1 className="font-bold text-5xl">Cadastro</h1>
-            <div className="flex flex-col items-center">
-                <form  onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-                    <div className="flex gap-6 w-full"> 
-                        <div className="flex flex-col gap-3 w-full">
+            <div className="flex flex-col justify-center pb-4 pt-0 px-6 max-w-6xl mx-auto">
+                <div className="flex flex-row items-center gap-2">
+                    <button onClick={() => router.back()} className="mt-4 text-blue-500 mb-4">
+                        <Image src={Arrow} alt="Voltar"/>
+                    </button>
+                    
+                    <h1 className="mt-0 mb-1 text-[48px] font-bold">
+                    Cadastro
+                    </h1>
+                </div>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-full">
+                    {/* Paciente and Tutor */}
+                    <div className="flex gap-6 w-full">
+                        <div className="flex flex-col gap-2 w-1/2 font-bold">
                             <p>Nome do Paciente</p>
-                            <input className="p-4 rounded-[8px] border" type="text" placeholder=" Digite aqui..."/>
+                            <input {...register("petName", {required: "Preencha o nome do paciente"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.petName ? 'border-red-500' : 'border-gray-300'}`} type="text" placeholder=" Digite aqui..."/>
+                            {errors.petName && <span className="text-red-500 text-xs font-normal">{errors.petName.message as string}</span>}
                         </div>
-                        <div className="flex flex-col gap-3 w-full">
+                        <div className="flex flex-col gap-2 w-1/2 font-bold">
                             <p>Nome do Tutor</p>
-                            <input className="p-4 rounded-[8px] border" type="text" placeholder="Digite aqui..."/>
+                            <input {...register("ownerName", {required: "Preencha o nome do tutor"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.ownerName ? 'border-red-500' : 'border-gray-300'}`} type="text" placeholder="Digite aqui..."/>
+                            {errors.ownerName && <span className="text-red-500 text-xs font-normal">{errors.ownerName.message as string}</span>}
                         </div>
                     </div>
-                    <div  className="flex flex-col gap-3 w-full"> {/* selection of species */}
-                        <p>Qual é a espécie do paciente?</p>
-                        <div className="flex gap-[60px] w-full">
-                            <input type="radio" name="especie" value="Ovelha"/>
-                            <input type="radio" name="especie" value="Gato" />
-                            <input type="radio" name="especie" value="Porco" />
-                            <input type="radio" name="especie" value="Vaca" />
-                            <input type="radio" name="especie" value="Cavalo" />
-                            <input type="radio" name="especie" value="Cachorro" />
+                    <div className="flex flex-col gap-2 w-full font-bold"> {/* selection of species */}
+                        <div className="flex flex-row items-center gap-2">
+                            <p>Qual é a espécie do paciente?</p>
+                            {errors.petSpecies && <span className="text-red-500 text-xs font-normal">{errors.petSpecies.message as string}</span>}
+                        </div>
+                        
+                        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 w-full font-normal">
+                            {animalOptions.map((animal) => (
+                                <label key={animal.value} className="flex flex-col items-center p-4 cursor-pointer hover:shadow-lg hover:bg-gray-100 has-[:checked]:bg-blue-100 peer-checked:border-2 peer-checked:border-blue-500 rounded-lg ">
+                                    <input {...register("petSpecies", {required: "Selecione a espécie do paciente"})} type="radio" name="petSpecies" value={animal.value} className={`peer hidden ${errors.petSpecies ? 'border-red-500' : 'border-gray-300'}`}/>
+                                    <Image src={animal.img} alt={animal.label} width={80} height={50} />
+                                </label>
+                            ))}
                         </div>
                     </div>
-                    <div className="flex gap-7">
-                        <div className="flex flex-col gap-3">
+                    <div className="flex gap-7 w-full">
+                        <div className="flex flex-col gap-2 w-1/2 font-bold">
                             <p>Idade do Paciente</p>
-                            <input className="p-4 rounded-[8px] border" type="text" placeholder="Digite aqui..."/>
+                            <input {...register("petAge", {required: "Preencha a idade do paciente"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.petAge ? 'border-red-500' : 'border-gray-300'}`} type="text" placeholder="Digite aqui..."/>
+                            {errors.petAge && <span className="text-red-500 text-xs font-normal">{errors.petAge.message as string}</span>}
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2 w-1/2 font-bold">
                             <p>Tipo de consulta</p>
-                            <select required className="p-4 rounded-[8px] border">
+                            <select {...register("appointmentType", {required: "Selecione o tipo de consulta"})} className={`px-4 h-[50px] rounded-[8px] border font-normal ${errors.appointmentType ? 'border-red-500' : 'border-gray-300'}`}>
                                 <option value="">-- Selecione aqui --</option>
                                 <option value="Checkup">Check-up</option>
                                 <option value="Retorno">Retorno</option>
                                 <option value="PrimeiraConsulta">Primeira Consulta</option>
                                 <option value="Vacinacao">Vacinação</option>
-                            </select>
+                            </select> 
+                            {errors.appointmentType && <span className="text-red-500 text-xs font-normal">{errors.appointmentType.message as string}</span>}
                         </div>
                     </div>
                     <div className="flex gap-7">
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2 w-1/2 font-bold">
                             <p>Médico Responsável</p>
-                            <input className="p-4 rounded-[8px] border" type="text" placeholder="Digite aqui..."/>
+                            <input {...register("doctorName", {required: "Preencha o nome do médico"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.doctorName ? 'border-red-500' : 'border-gray-300'}`} type="text" placeholder="Digite aqui..."/>
+                            {errors.doctorName && <span className="text-red-500 text-xs font-normal">{errors.doctorName.message as string}</span>}
                         </div>
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2 w-1/4 font-bold">
                             <p>Data do atendimento</p>
-                            <input className="p-4 rounded-[8px] border" type="date"/>
+                            <input {...register("appointmentDate", {required: "Preencha a data do atendimento"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.appointmentDate ? 'border-red-500' : 'border-gray-300'}`} type="date"/>
+                            {errors.appointmentDate && <span className="text-red-500 text-xs font-normal">{errors.appointmentDate.message as string}</span>}
                         </div>
-                        <div className="flex flex-col gap-3">
-                            <p>Data do atendimento</p>
-                            <input className="p-4 rounded-[8px] border" type="time" />
+                        <div className="flex flex-col gap-2 w-1/4 font-bold">
+                            <p>Horário do atendimento </p>
+                            <input {...register("appointmentTime", {required: "Preencha o horário do atendimento"})} className={`p-4 h-[50px] rounded-[8px] border font-normal ${errors.appointmentTime ? 'border-red-500' : 'border-gray-300'}`} type="time" />
+                            {errors.appointmentTime && <span className="text-red-500 text-xs font-normal">{errors.appointmentTime.message as string}</span>}
                         </div>
                     </div>
-
-                    <div className="w-full flex flex-col gap-3">
+                    <div className="w-full flex flex-col gap-2 font-bold">
                         <p>Descrição do Problema</p>
-                        <textarea className="p-4 rounded-[8px] border w-full" />
+                        <textarea {...register("problemDescription", {required: "Preencha a descrição do problema"})} className={`p-4 h-[104px] rounded-[8px] border w-full font-normal ${errors.problemDescription ? 'border-red-500' : 'border-gray-300'}`} />
+                        {errors.problemDescription && <span className="text-red-500 text-xs font-normal">{errors.problemDescription.message as string}</span>}
                     </div>
-                        <RegisterModal />
+                        <div className="text-right">
+                            <button className="w-[205px] h-12 rounded-3xl bg-[#50E678] shadow-md border border-input inline-flex items-center justify-center text-white font-medium transition-colors hover:bg-[#43C268]">
+                                Finalizar Cadastro
+                            </button>
+                        </div>
+
+                        {/* Register modal */}
+                        <div className="hidden" ref={hiddenModalTriggerRef}>
+                            <RegisterModal/>
+                        </div>
                     
                 </form>
             </div>
