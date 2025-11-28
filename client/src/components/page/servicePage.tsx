@@ -11,7 +11,6 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import Link from "next/link";
-// Hover
 
 const activeAppointmentsMock = [
   {
@@ -296,7 +295,7 @@ export default function ServicePage() {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2} //mostra dois meses
+                    numberOfMonths={1} 
                   />
                 </PopoverContent>
               </Popover>
@@ -323,7 +322,7 @@ export default function ServicePage() {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2}
+                    numberOfMonths={1}
                   />
                 </PopoverContent>
               </Popover>
