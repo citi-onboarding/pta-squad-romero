@@ -1,5 +1,5 @@
-import ComponentsTest from "@/components/componentsTest/clientSidePage";
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return <ComponentsTest />;
+  redirect('/appointment');
 }
