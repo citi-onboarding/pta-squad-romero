@@ -17,10 +17,10 @@ export default function Header() {
       </div>
       {/* Atendimento/Cadastro */}
       <div className="flex flex-1 justify-center md:flex flex-row gap-12">
-        <Link href="#" className={`pb-1 ${pathname === '/atendimento' ? 'border-b-2 border-green-500' : ''}`}>
+        <Link href="#" className={`pb-1 ${pathname === '/appointment' ? 'border-b-2 border-green-500' : ''}`}>
             Atendimento
         </Link>
-        <Link href="#" className={`pb-1 ${pathname === '/cadastro' ? 'border-b-2 border-green-500' : ''}`}>
+        <Link href="#" className={`pb-1 ${pathname === '/register' ? 'border-b-2 border-green-500' : ''}`}>
             Cadastro
         </Link>
       </div>
