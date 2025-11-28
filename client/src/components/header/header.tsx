@@ -17,7 +17,7 @@ export default function Header() {
       </div>
       {/* Atendimento/Cadastro */}
       <div className="flex flex-1 justify-center md:flex flex-row gap-12">
-        <Link href="http://localhost:3000/appointment" className={`pb-1 ${pathname === '/appointment' ? 'border-b-2 border-green-500' : ''}`}>
+        <Link href="/appointment" className={`pb-1 ${pathname === '/appointment' ? 'border-b-2 border-green-500' : ''}`}>
             Atendimento
         </Link>
         <Link href="/register" className={`pb-1 ${pathname === '/register' ? 'border-b-2 border-green-500' : ''}`}>
