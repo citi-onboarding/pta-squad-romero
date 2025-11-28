@@ -55,8 +55,8 @@ export default function Register() {
             <Header />
             <div className="flex flex-col justify-center pb-4 px-6 max-w-6xl mx-auto">
                 <div className="flex flex-row items-center gap-2">
-                    <button onClick={() => router.back()} className="mt-4 text-blue-500 mb-4">
-                        <Image src={Arrow} alt="Voltar"/>
+                    <button type="button" onClick={() => router.push('/appointment')} className="mt-4 text-blue-500 mb-4">
+                        <Image src={Arrow} alt="Voltar" />
                     </button>
                     
                     <h1 className="mb-1 text-[48px] font-bold">
