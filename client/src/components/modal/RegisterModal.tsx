@@ -2,7 +2,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import React, { useRef } from 'react';
 import { Input } from "@/components/ui/input"
@@ -10,22 +9,31 @@ import Image from "next/image";
 import { Button } from "../ui/button"
 import { LogoCITiPet } from "@/assets";
 
-export function RegisterModal() {
+interface RegisterModalProps {
+    isOpen: boolean;
+    setIsOpen: (open: boolean) => void;
+}
+
+export function RegisterModal({ isOpen, setIsOpen }: RegisterModalProps) {
   const emailRef : any = useRef(); // By using ref, it gets the text inputed on the email field and tranfers it to the alert msg
-  const onSubmit = (e : any) => {
+  
+  const onSubmit = (e : React.FormEvent) => {
     e.preventDefault(); // if the email field is empty, it shows the adequate message
-    if (emailRef.current.value == "") {
-      alert("Por favor, insira um email válido")
-    } else alert(emailRef.current.value);
+    e.stopPropagation();
+
+    const email = emailRef.current?.value;
+
+    if (!email || email === "") {
+      alert("Por favor, insira um email válido");
+  
+    } else {
+      alert(`Email enviado para: ${email}`);
+      setIsOpen(false); // close modal
+    }
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <button className="w-[205px] h-12 rounded-3xl bg-[#50E678] shadow-md border border-input inline-flex items-center justify-center text-white font-medium transition-colors hover:bg-[#43C268]">
-          Finalizar Cadastro
-        </button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="w-[408px] h-[423px] rounded-3xl  shadow-md">
         <form onSubmit={onSubmit} className="flex flex-col items-center gap-[29px] m-7"> {/* beginning of form with an email input element */}
           <Image src={LogoCITiPet} alt="Logo pet" />
