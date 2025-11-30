@@ -15,7 +15,6 @@ import vacaImg from '../../../src/assets/cow.svg';
 import cachorroImg from '../../../src/assets/doggy.png';
 import Arrow from "../../../src/assets/arrow_back_new.svg";
 import Check from "../../../src/assets/task_alt.svg";
-import { is } from "date-fns/locale";
 
 // Mock data for backend
 const mockPatients = [
@@ -39,7 +38,7 @@ const mockPatients = [
     doctorName : "Dra. Camila Andrade",
     problemDescription: "O animal está com tosse persistente e secreção nasal.",
     image: gatoImg
-  }
+  },
 ];
 
 const mockAllAppointments = [
@@ -83,19 +82,15 @@ interface DetailsPageProps {
 
 export default function DetailsPage({ petId }: DetailsPageProps) {
     const router = useRouter();
-    const params = useParams();
-    const currentPetId = Array.isArray(params.id) ? params.id[0] : params.id;
-    const currentPatient = mockPatients.find((p) => p.id === currentPetId);
-
-    const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+    const currentPatient = mockPatients.find((p) => p.id === petId);
 
     // Filter history based on current patient
     const now = new Date();
     const historyList = mockAllAppointments.filter((appointment) => {
-    const isSamePet = appointment.petId === currentPetId;
-    const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
-    const isPast = appointmentDateTime < now;
-    return isSamePet && isPast;
+        const isSamePet = appointment.petId === petId;
+        const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+        const isPast = appointmentDateTime < now;
+        return isSamePet && isPast;
     });
 
     // Order history by date descending
@@ -118,17 +113,17 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                 <button type="button" onClick={() => router.push("/appointment")}>
                     <Image src={Arrow} alt="Back arrow" />
                 </button>
-                <h1 className="mb-1 text-[48px] font-bold">Detalhes da Consulta</h1>
+                <h1 className="mb-1 text-[32px] sm:text-[40px] md:text-[48px] font-bold">Detalhes da Consulta</h1>
             </div>
 
             {/* Pacient and History */}
             <div className="flex flex-col lg:flex-row justify-between gap-8">
-                <div className="flex flex-col w-[500px]">
+                <div className="flex flex-col w-full lg:w-[500px]">
                     {/* Pacient */}
                     <p className="font-bold text-[24px]">Paciente</p>
                     {/* Pet and data */}
                     <div className="flex flex-row gap-8 mt-4">
-                        <div className="w-[200px] h-[250px] relative mt-4">
+                        <div className="w-[150px] h-[180px] sm:w-[200px] sm:h-[250px] relative mt-4">
                             <Image
                                 src={currentPatient.image}
                                 alt={currentPatient.petName}
@@ -139,8 +134,8 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                         {/* Pet Data */}
                         <div className="flex flex-col justify-between">
                             <div className="justify-start">
-                                <p className="font-bold text-[20px] mt-4">{currentPatient.petName}</p>
-                                <p className="">{currentPatient.petAge}</p>
+                                <p className="font-bold text-[16px] mt-4">{currentPatient.petName}</p>
+                                <p>{currentPatient.petAge}</p>
                             </div>
                             <div className="justify-end">
                                 <p>{currentPatient.ownerName}</p>
@@ -159,7 +154,7 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                         <p className="text-[15px] bg-blue-200 px-2 py-1 rounded-md">{currentPatient.appointmentType}</p>
                     </div>
                     {/* Button to open modal */}
-                    <div className="flex flex-col items-center mt-5 w-full">
+                    <div className="flex flex-col items-center mt-5 w-full border border-gray-300 rounded-2xl p-4 shadow-sm">
                         <p className="font-bold text-[15px] mb-2">Deseja realizar outra consulta?</p>
                         <ConsultationModal>
                             <button className="bg-[#50E678] text-white rounded-full w-full py-2 flex flex-row items-center justify-center gap-2 shadow-sm hover:bg-[#43C268] transition-colors">
@@ -172,11 +167,11 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                 </div> 
                 
                 {/* History Card */}
-                <div className="flex flex-col items-end">
-                    <div className="w-[510px] space-y-4">
-                        <p className="font-bold text-[24px] mb-4">Histórico de Consultas</p>
-                        
-                        {historyList.length > 0 ? (
+                <div className="flex flex-col w-full lg:items-end lg:w-auto items-center mt-4 lg:mt-0">
+                    <div className="w-full max-w-md lg:w-[510px] mx-auto lg:mx-0">
+                        <p className="font-bold text-[24px] mb-4 text-center lg:text-left">Histórico de Consultas</p>
+                        <div className="space-y-4 border border-gray-300 rounded-2xl p-4 shadow-sm">
+                            {historyList.length > 0 ? (
                             historyList.map((appointment) => (
                             <HistoryCard
                                 key={appointment.id}
@@ -188,9 +183,9 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                             />
                             ))
                         ) : (
-                            <p>Nenhum histórico de consultas encontrado.</p>
+                            <p className="text-center">Nenhum histórico de consultas encontrado.</p>
                         )}
-
+                        </div>
                     </div>
                 </div>
             </div>

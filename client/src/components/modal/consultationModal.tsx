@@ -242,7 +242,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
           {/* Botão de Finalizar Cadastro */}
           <button 
             type="submit" 
-            className={`mt-2 w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
+            className={`mt-4 w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
                         bg-[#50E678] hover:bg-[#43C268] h-12`} 
           >
             Finalizar cadastro
