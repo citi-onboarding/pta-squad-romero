@@ -24,7 +24,7 @@ const animalOptions = [
 ];
 
 export default function Register() {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const router = useRouter();
 
     const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -138,7 +138,13 @@ export default function Register() {
                     </div>
                 </form>
                 {/* Register modal */}
-                <RegisterModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+                <RegisterModal
+                    isOpen={isModalOpen} 
+                    setIsOpen={(open) => {
+                        setIsModalOpen(open);
+                        if (!open) reset();
+                    }}
+                />
             </div>
         </>
     )
