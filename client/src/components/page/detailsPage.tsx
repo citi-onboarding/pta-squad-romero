@@ -1,17 +1,13 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import React from "react";
+import { useRouter} from "next/navigation";
 import Header from "../header/header";
 import HistoryCard from "../card/historyCard";
 import ConsultationModal from "../modal/consultationModal";
 import Image from "next/image";
 
 // Images
-import ovelhaImg from '../../../src/assets/sheep.svg';
 import gatoImg from '../../../src/assets/cat.svg';
-import cavaloImg from '../../../src/assets/horse.svg';
-import porcoImg from '../../../src/assets/pig.svg';
-import vacaImg from '../../../src/assets/cow.svg';
 import cachorroImg from '../../../src/assets/doggy.png';
 import Arrow from "../../../src/assets/arrow_back_new.svg";
 import Check from "../../../src/assets/task_alt.svg";
