@@ -19,6 +19,7 @@ interface ConsultationFormValues {
   doctorName: string;
   date: string;
   time: string;
+  problemDescription: string;
 }
 
 /**
@@ -50,6 +51,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
       doctorName: "",
       date: "",
       time: "",
+      problemDescription: ""
     },
     mode: "onSubmit", // Validação ocorre apenas no envio.
   });
@@ -69,7 +71,8 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     Tipo de consulta: ${data.consultationType}\n
     Médico Responsável: ${data.doctorName}\n
     Data do atendimento: ${data.date}\n
-    Horário do atendimento: ${data.time}`;
+    Horário do atendimento: ${data.time}\n
+    Descrição do problema: ${data.problemDescription}`;
 
     alert(alertMessage); // Alerta de confirmação.
     
@@ -139,7 +142,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
         <form onSubmit={handleSubmit(onSubmit)}>
 
           {/* Layout responsivo com grid de 2 colunas em telas maiores */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-5">
 
             {/* Campo 1: Tipo de consulta  */}
             <div>
@@ -214,11 +217,32 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
             </div>
 
           </div>
+
+          {/* Campo 5: Descricao do Problema */}
+            <div>
+              <label className="block text-base font-bold text-gray-900 mb-2">Descrição do Problema</label>
+              <textarea
+                placeholder="Digite aqui..."
+                {...register('problemDescription', { 
+                  required: "Informe a descrição do problema.",
+                  minLength: {
+                    value: 2,
+                    message: "A descrição do problema deve ter no mínimo 2 caracteres."
+                  }
+                })} 
+                className={`w-full py-3 px-4 border ${getErrorClass('problemDescription')} rounded-2xl 
+                            focus:ring-green-500 focus:border-green-500 transition duration-150
+                            min-h-[80px]`}
+              />
+              {errors.problemDescription && (
+                <p className="text-sm text-red-500">{errors.problemDescription.message}</p>
+              )}
+            </div>
           
           {/* Botão de Finalizar Cadastro */}
           <button 
             type="submit" 
-            className={`w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
+            className={`mt-2 w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
                         bg-[#50E678] hover:bg-[#43C268] h-12`} 
           >
             Finalizar cadastro

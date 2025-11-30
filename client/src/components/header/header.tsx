@@ -20,7 +20,7 @@ export default function Header() {
         <Link href="http://localhost:3000/appointment" className={`pb-1 ${pathname === '/appointment' ? 'border-b-2 border-green-500' : ''}`}>
             Atendimento
         </Link>
-        <Link href="#" className={`pb-1 ${pathname === '/cadastro' ? 'border-b-2 border-green-500' : ''}`}>
+        <Link href="http://localhost:3000/register" className={`pb-1 ${pathname === '/cadastro' ? 'border-b-2 border-green-500' : ''}`}>
             Cadastro
         </Link>
       </div>

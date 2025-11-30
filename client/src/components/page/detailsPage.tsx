@@ -1,54 +1,200 @@
-"use client"
-import React from "react"
-import { useRouter } from "next/navigation"
-import Header from "../header/header"
-import HistoryCard from "../card/historyCard"
-import Image from "next/image"
+"use client";
+import React, { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import Header from "../header/header";
+import HistoryCard from "../card/historyCard";
+import ConsultationModal from "../modal/consultationModal";
+import Image from "next/image";
 
-import Arrow from "../../../src/assets/arrow_back_new.svg"
+// Images
+import ovelhaImg from '../../../src/assets/sheep.svg';
+import gatoImg from '../../../src/assets/cat.svg';
+import cavaloImg from '../../../src/assets/horse.svg';
+import porcoImg from '../../../src/assets/pig.svg';
+import vacaImg from '../../../src/assets/cow.svg';
+import cachorroImg from '../../../src/assets/doggy.png';
+import Arrow from "../../../src/assets/arrow_back_new.svg";
+import Check from "../../../src/assets/task_alt.svg";
+import { is } from "date-fns/locale";
 
-export default function DetailsPage() {
-    const router = useRouter()
+// Mock data for backend
+const mockPatients = [
+  {
+    id: "1",
+    petName: "Rex",
+    ownerName: "Carlos Silva",
+    petAge: "5 anos",
+    appointmentType: "Consulta de rotina",
+    doctorName : "Dr. João Paulo",
+    problemDescription: "O animal apresenta falta de apetite e cansaço excessivo há 2 dias, O animal apresenta falta de apetite e cansaço excessivo há 2 dias. ",
+    image: cachorroImg
+  },
 
-    const mockAppointment = {
-        appointmentDate: "12/08",
-        appointmentTime: "14:00",
-        doctorName: "Dr. João Silva",
-        appointmentType: "Consulta de rotina",
+  {
+    id: "2",
+    petName: "Félix",
+    ownerName: "Pedro Costa",
+    petAge: "3 anos",
+    appointmentType: "Vacinação",
+    doctorName : "Dra. Camila Andrade",
+    problemDescription: "O animal está com tosse persistente e secreção nasal.",
+    image: gatoImg
+  }
+];
+
+const mockAllAppointments = [
+  {
+    id: 101,
+    petId: "1",
+    appointmentDate: "2025-08-12",
+    appointmentTime: "14:00",
+    doctorName: "Dr. João Paulo",
+    appointmentType: "Consulta de rotina"
+  },
+  {
+    id: 102,
+    petId: "1",
+    appointmentDate: "2025-08-13",
+    appointmentTime: "09:30",
+    doctorName: "Dra. Camila Andrade",
+    appointmentType: "Vacinação"
+  },
+  {
+    id: 103,
+    petId: "1",
+    appointmentDate: "2025-08-14",
+    appointmentTime: "11:00",
+    doctorName: "Dr. Rafael Moura",
+    appointmentType: "Retorno"
+  },
+  {
+    id: 104,
+    petId: "1",
+    appointmentDate: "2025-08-15",
+    appointmentTime: "16:20",
+    doctorName: "Dra. Ana Beatriz",
+    appointmentType: "Exame de sangue"
+  }
+];
+// This componente expects a ID prop to identify the pet
+interface DetailsPageProps {
+  petId: string;
+}
+
+export default function DetailsPage({ petId }: DetailsPageProps) {
+    const router = useRouter();
+    const params = useParams();
+    const currentPetId = Array.isArray(params.id) ? params.id[0] : params.id;
+    const currentPatient = mockPatients.find((p) => p.id === currentPetId);
+
+    const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+
+    // Filter history based on current patient
+    const now = new Date();
+    const historyList = mockAllAppointments.filter((appointment) => {
+    const isSamePet = appointment.petId === currentPetId;
+    const appointmentDateTime = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`);
+    const isPast = appointmentDateTime < now;
+    return isSamePet && isPast;
+    });
+
+    // Order history by date descending
+    historyList.sort((a, b) => {
+        const dateA = new Date(`${a.appointmentDate} ${a.appointmentTime}`);
+        const dateB = new Date(`${b.appointmentDate} ${b.appointmentTime}`);
+        return dateB.getTime() - dateA.getTime();
+    });
+
+    if (!currentPatient) {
+        return <div>Paciente não encontrado.</div>;
     }
-
+    
     return (
         <>
-            <Header />
-            <div className="flex flex-col justify-center pb-4 px-6 py-6 max-w-6xl mx-auto">
-                {/* Button and Title */}
-                <div className="flex flex-row items-center gap-4">
-                    <button type="button" onClick={() => router.push('/appointment')}>
-                        <Image src={Arrow} alt="Back arrow" />
-                    </button>
-                    
-                    <h1 className="mb-1 text-[48px] font-bold">
-                    Detalhes da Consulta
-                    </h1>
-                </div>
-                {/* History Card */}
-                <div className="flex flex-col items-center mt-8">
-                    <HistoryCard
-                    appointmentDate={mockAppointment.appointmentDate}
-                    appointmentTime={mockAppointment.appointmentTime}
-                    doctorName={mockAppointment.doctorName}
-                    appointmentType={mockAppointment.appointmentType}
-                />
-                </div>
-                
-                
-            
-
-
-
+        <Header />
+        <div className="flex flex-col justify-center pb-4 px-6 py-6 max-w-6xl mx-auto">
+            {/* Button and Title */}
+            <div className="flex flex-row items-center gap-4">
+                <button type="button" onClick={() => router.push("/appointment")}>
+                    <Image src={Arrow} alt="Back arrow" />
+                </button>
+                <h1 className="mb-1 text-[48px] font-bold">Detalhes da Consulta</h1>
             </div>
-            
-            
-        </>
-    )
-    }
+
+            {/* Pacient and History */}
+            <div className="flex flex-col lg:flex-row justify-between gap-8">
+                <div className="flex flex-col w-[500px]">
+                    {/* Pacient */}
+                    <p className="font-bold text-[24px]">Paciente</p>
+                    {/* Pet and data */}
+                    <div className="flex flex-row gap-8 mt-4">
+                        <div className="w-[200px] h-[250px] relative mt-4">
+                            <Image
+                                src={currentPatient.image}
+                                alt={currentPatient.petName}
+                                fill
+                                className="object-cover"
+                            />
+                        </div>
+                        {/* Pet Data */}
+                        <div className="flex flex-col justify-between">
+                            <div className="justify-start">
+                                <p className="font-bold text-[20px] mt-4">{currentPatient.petName}</p>
+                                <p className="">{currentPatient.petAge}</p>
+                            </div>
+                            <div className="justify-end">
+                                <p>{currentPatient.ownerName}</p>
+                                <p>{currentPatient.doctorName}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Problem Description */}
+                    <div className="mt-4">
+                        <p className="font-bold text-[15px] mb-2">Descrição do Problema:</p>
+                        <p className="w-full text-[14px] leading-relaxed">{currentPatient.problemDescription}</p>
+                    </div>
+                    {/* Appointment Type */}
+                    <div className="mt-4 mr-20 flex flex-row items-center gap-6">
+                        <p className="font-bold text-[15px]">Tipo de Consulta:</p>
+                        <p className="text-[15px] bg-blue-200 px-2 py-1 rounded-md">{currentPatient.appointmentType}</p>
+                    </div>
+                    {/* Button to open modal */}
+                    <div className="flex flex-col items-center mt-5 w-full">
+                        <p className="font-bold text-[15px] mb-2">Deseja realizar outra consulta?</p>
+                        <ConsultationModal>
+                            <button className="bg-[#50E678] text-white rounded-full w-full py-2 flex flex-row items-center justify-center gap-2 shadow-sm hover:bg-[#43C268] transition-colors">
+                                <Image src={Check} alt="Check" className="brightness-0 invert"/>
+                                Agendamento
+                            </button>
+                        </ConsultationModal>
+                    </div>
+                    
+                </div> 
+                
+                {/* History Card */}
+                <div className="flex flex-col items-end">
+                    <div className="w-[510px] space-y-4">
+                        <p className="font-bold text-[24px] mb-4">Histórico de Consultas</p>
+                        
+                        {historyList.length > 0 ? (
+                            historyList.map((appointment) => (
+                            <HistoryCard
+                                key={appointment.id}
+                                appointmentDate={new Date(appointment.appointmentDate + 'T' + appointment.appointmentTime)
+                                .toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                                appointmentTime={appointment.appointmentTime}
+                                doctorName={appointment.doctorName}
+                                appointmentType={appointment.appointmentType}
+                            />
+                            ))
+                        ) : (
+                            <p>Nenhum histórico de consultas encontrado.</p>
+                        )}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </>
+);
+}
