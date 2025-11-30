@@ -40,11 +40,11 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, appointme
         switch (appointmentType) {
             case "Primeira Consulta":
                 return "bg-[#BFB5FF]"; 
-            case "Vacinação":
+            case "Vacinacao":
                 return "bg-[#AAE1FF]"; 
             case "Retorno":
                 return "bg-[#FF6419]"; 
-            case "Check-up":
+            case "Checkup":
                 return "bg-[#9CFF95]"; 
             default:
                 return "bg-[#BFB5FF]";
