@@ -297,9 +297,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 75, 
-    backgroundColor: "#50E678", // Cor verde clara da logo/footer
-    borderTopLeftRadius: 24, // Borda arredondada superior esquerda
-    borderTopRightRadius: 24, // Borda arredondada superior direita
+    backgroundColor: "#50E678", 
+    borderTopLeftRadius: 24, 
+    borderTopRightRadius: 24, 
   },
 });
 
