@@ -11,8 +11,8 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import Link from "next/link";
-import { getAppointments } from "@/service/appointment";
-import { getPetById } from "@/service/pet";
+import { getAppointments } from "@/services/appointment";
+import { getPetById } from "@/services/pet";
 // Function to format Data from yyyy-mm-dd to dd/mm if the year is the current or dd/mm/aaaa if is not the current year
 const formatDisplayDate = (dateObject: Date): string => {
   const currentYear = new Date().getFullYear();
