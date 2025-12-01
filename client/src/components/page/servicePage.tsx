@@ -3,164 +3,94 @@ import Header from "../header/header";
 import { PetCard } from "../card/petCard";
 import { ChevronLeft, CalendarIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger, } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { DateRange } from "react-day-picker";
 import Link from "next/link";
-// Hover
-
-const activeAppointmentsMock = [
-  {
-    id: 1,
-    date: "26/11",
-    time: "13:00",
-    doctor: "Dr. José Carlos",
-    type: "Vacinação",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 2,
-    date: "27/11",
-    time: "14:00",
-    doctor: "Dr. José Carlos",
-    type: "Check-up",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 3,
-    date: "28/11",
-    time: "15:00",
-    doctor: "Dr. José Carlos",
-    type: "Primeira Consulta",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 4,
-    date: "29/11",
-    time: "16:00",
-    doctor: "Dr. José Carlos",
-    type: "Retorno",
-    species: "dog",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 5,
-    date: "30/11",
-    time: "17:00",
-    doctor: "Dr. José Carlos",
-    type: "Check-up",
-    species: "dog",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 6,
-    date: "01/12",
-    time: "18:00",
-    doctor: "Dr. José Carlos",
-    type: "Vacinação",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-];
-
-const historyAppointmentsMock = [
-  {
-    id: 7,
-    date: "01/11",
-    time: "10:00",
-    doctor: "Dr. José Carlos",
-    type: "Vacinação",
-    species: "dog",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 8,
-    date: "02/11",
-    time: "11:00",
-    doctor: "Dr. José Carlos",
-    type: "Retorno",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 9,
-    date: "03/11",
-    time: "12:00",
-    doctor: "Dr. José Carlos",
-    type: "Primeira Consulta",
-    species: "dog",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 10,
-    date: "04/11",
-    time: "13:00",
-    doctor: "Dr. José Carlos",
-    type: "Vacinação",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 11,
-    date: "05/11",
-    time: "14:00",
-    doctor: "Dr. José Carlos",
-    type: "Check-up",
-    species: "dog",
-    name: "Luna",
-    owner: "João Alves",
-  },
-  {
-    id: 12,
-    date: "06/11",
-    time: "15:00",
-    doctor: "Dr. José Carlos",
-    type: "Retorno",
-    species: "cat",
-    name: "Luna",
-    owner: "João Alves",
-  },
-];
-
-const allAppointments = [...activeAppointmentsMock, ...historyAppointmentsMock];
-
-// Converte "DD/MM" para um objeto Date.
-const parseDate = (dateString: string) => {
-  const [day, month] = dateString.split("/").map(Number);
-  // Usa o ano atual para garantir a comparação
-  const year = new Date().getFullYear();
-  return new Date(year, month - 1, day);
+import { getAppointments } from "@/service/appointment";
+import { getPetById } from "@/service/pet";
+// Function to format Data from yyyy-mm-dd to dd/mm if the year is the current or dd/mm/aaaa if is not the current year
+const formatDisplayDate = (dateObject: Date): string => {
+  const currentYear = new Date().getFullYear();
+  // Verify if the Date year is the same as the current year
+  if (dateObject.getFullYear() === currentYear) {
+    return format(dateObject, "dd/MM", { locale: ptBR });
+  } else {
+    return format(dateObject, "dd/MM/yyyy", { locale: ptBR });
+  }
+};
+// Turn date string (only yyyy-mm-dd format) into an object Date
+const parseDate = (dateString: string | null | undefined): Date => {
+  if (!dateString || typeof dateString !== "string") {
+    // if Date is invalid, return Nan
+    return new Date(NaN);
+  }
+  if (dateString.includes("-")) {
+    const parts = dateString.split("-").map(Number);
+    if (parts.length === 3 && !parts.some(isNaN)) {
+      const [year, month, day] = parts;
+      if (month >= 1 && month <= 12) {
+        // Constructor Date uses 0 to 11 months, that's why we subtracte 1
+        return new Date(year, month - 1, day);
+      }
+    }
+  }
+  // return Nan if Date is not on the expected format (ex.: dd/mm/yyyy)
+  return new Date(NaN);
 };
 
 export default function ServicePage() {
+  const [allAppointments, setAllAppointments] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState<"active" | "history">("active");
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [searchText, setSearchText] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
 
-  // Data de hoje
+  // Today's Date
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const fetchData = async () => {
+    try {
+      // Fetch all Appointments.
+      const appointments = await getAppointments();
+      // Fetch Pet data for each appointment
+      const combinedDataPromises = appointments.map(
+        async (appointment: any) => {
+          try {
+            // Fetch pet data using the ID from the appointment
+            const petData = await getPetById(appointment.petId);
+            return {
+              ...appointment,
+              petName: petData.petName,
+              ownerName: petData.ownerName,
+              petSpecies: petData.petSpecies,
+              petAge: petData.petAge,
+            };
+          } catch (petError) {
+            console.log(`Pet ID ${appointment.petId} not found.`, petError);
+            return null;
+          }
+        }
+      );
+      const combinedData = await Promise.all(combinedDataPromises);
+      setAllAppointments(combinedData);
+    } catch (error) {
+      console.error( "ERROR during fetchData:",error);
+      setAllAppointments([]);
+    }
+  };
+  // useEffect to call the data fetching function only once on mount
+  useEffect(() => {
+    fetchData();
+  }, []);
+  // Date Filter
   const filteredAppointments = allAppointments.filter((appointment) => {
-    const appointmentDate = parseDate(appointment.date);
+    const appointmentDate = parseDate(appointment.appointmentDate);
     const normalizedAppointmentDate = new Date(
       appointmentDate.setHours(0, 0, 0, 0)
     );
@@ -171,15 +101,15 @@ export default function ServicePage() {
       return normalizedAppointmentDate < today;
     }
   });
-
+  // Calendar filter
   const dateFilteredAppointments = filteredAppointments.filter(
     (appointment) => {
-      // Se não há filtro de data, retorna tudo
+      // If calendar is empty, returns all
       if (!dateRange || !dateRange.from) {
         return true;
       }
 
-      const appointmentDate = parseDate(appointment.date);
+      const appointmentDate = parseDate(appointment.appointmentDate);
       const normalizedAppointmentDate = new Date(
         appointmentDate.setHours(0, 0, 0, 0)
       );
@@ -195,14 +125,14 @@ export default function ServicePage() {
       return isAfterStart && isBeforeEnd;
     }
   );
-
+  // Text Filter
   const normalizedSearchText = appliedSearch.toLowerCase().trim();
 
   const appointmentsToShow = dateFilteredAppointments.filter((appointment) => {
     if (!normalizedSearchText) {
       return true;
     }
-    const doctorMatch = appointment.doctor
+    const doctorMatch = appointment.doctorName
       .toLowerCase()
       .includes(normalizedSearchText);
 
@@ -296,7 +226,7 @@ export default function ServicePage() {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2} //mostra dois meses
+                    numberOfMonths={1}
                   />
                 </PopoverContent>
               </Popover>
@@ -323,7 +253,7 @@ export default function ServicePage() {
                     selected={dateRange}
                     onSelect={setDateRange}
                     locale={ptBR}
-                    numberOfMonths={2}
+                    numberOfMonths={1}
                   />
                 </PopoverContent>
               </Popover>
@@ -343,9 +273,13 @@ export default function ServicePage() {
         <div className="max-w-7xl lg:max-w-screen-2xl mx-auto w-full pl-8 grid lg:grid-cols-3 grid-cols-2 gap-14 mb-12">
           {appointmentsToShow.length > 0 ? (
             appointmentsToShow.map((appointment) => {
-              // Calcula o status para passar ao PetCard
+              // Turn appointmentDate (from DB) into Object
+              const appointmentDateObject = parseDate( appointment.appointmentDate );
+              // Format Date
+              const displayDate = formatDisplayDate(appointmentDateObject);
+              // Checks Status
               const appointmentStatus =
-                parseDate(appointment.date).setHours(0, 0, 0, 0) >=
+                appointmentDateObject.setHours(0, 0, 0, 0) >=
                 today.getTime()
                   ? "present"
                   : "past";
@@ -354,13 +288,13 @@ export default function ServicePage() {
                 <Link href={`/detailing[id]`}>
                   <PetCard
                     key={appointment.id}
-                    appointmentDate={appointment.date}
-                    appointmentTime={appointment.time}
-                    doctorName={appointment.doctor}
-                    appointmentType={appointment.type}
-                    petSpecies={appointment.species}
-                    petName={appointment.name}
-                    ownerName={appointment.owner}
+                    appointmentDate={displayDate}
+                    appointmentTime={appointment.appointmentTime}
+                    doctorName={appointment.doctorName}
+                    appointmentType={appointment.appointmentType}
+                    petSpecies={appointment.petSpecies}
+                    petName={appointment.petName}
+                    ownerName={appointment.ownerName}
                     status={appointmentStatus}
                   />
                 </Link>
