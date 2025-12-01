@@ -38,7 +38,7 @@ const mockAllAppointments = [
     appointmentDate: "2025-08-12",
     appointmentTime: "14:00",
     doctorName: "Dr. João Paulo",
-    appointmentType: "Consulta de rotina",
+    appointmentType: "Checkup",
     problemDescription: "O animal apresenta falta de apetite e cansaço excessivo há 2 dias.",
   },
   {
@@ -65,7 +65,7 @@ const mockAllAppointments = [
     appointmentDate: "2025-08-15",
     appointmentTime: "16:20",
     doctorName: "Dra. Ana Beatriz",
-    appointmentType: "Exame de sangue",
+    appointmentType: "Primeira Consulta",
     problemDescription: "O animal possui sintomas como enjoo, dificuldade em andar e fraqueza.",
   }
 ];
@@ -113,6 +113,21 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
     if (!currentPatient) {
         return <div>Paciente não encontrado.</div>;
     }
+    // Change bg color of appointment type
+    const getAppointmentStyle = (type: string | undefined) => {
+        switch (type) {
+            case "Vacinação":
+                return "bg-green-200";
+            case "Primeira Consulta":
+                return "bg-blue-200";
+            case "Retorno":
+                return "bg-orange-200";
+            case "Checkup":
+                return "bg-yellow-200"
+            default:
+                return "bg-gray-100";
+            }
+    };
     
     return (
         <>
@@ -161,7 +176,7 @@ export default function DetailsPage({ petId }: DetailsPageProps) {
                     {/* Appointment Type */}
                     <div className="mt-4 mr-20 flex flex-row items-center gap-6">
                         <p className="font-bold text-[15px]">Tipo de Consulta:</p>
-                        <p className="text-[15px] bg-blue-200 px-2 py-1 rounded-md">{displayedAppointment?.appointmentType || "-"}</p>
+                        <p className={`text-[15px] px-2 py-1 rounded-md ${getAppointmentStyle(displayedAppointment?.appointmentType)}`}>{displayedAppointment?.appointmentType || "-"}</p>
                     </div>
                     {/* Button to open modal */}
                     <div className="flex flex-col items-center mt-5 w-full border border-gray-300 rounded-2xl p-4 shadow-sm">
