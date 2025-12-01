@@ -6,6 +6,7 @@ interface AppointmentCardProps {
   appointmentTime: string;
   doctorName: string;
   appointmentType: string;
+  onClick: () => void
 }
 
 export default function HistoryCard({
@@ -13,6 +14,7 @@ export default function HistoryCard({
   appointmentTime,
   doctorName,
   appointmentType,
+  onClick
 }: AppointmentCardProps) {
   return (
     <div>
@@ -38,9 +40,12 @@ export default function HistoryCard({
           {doctorName}
         </p>
         {/* Arrow */}
-        <a href="#" className="flex items-center justify-center rotate-180 shrink-0">
-          <Image src={Arrow} alt="Arrow"/>
-        </a>
+        <button 
+            type="button" 
+            onClick={onClick}
+            className="flex items-center justify-center rotate-180 shrink-0">
+          <Image src={Arrow} alt="Ver detalhes"/>
+        </button>
       </div>
     </div>
   );
