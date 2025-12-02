@@ -6,7 +6,7 @@ import HistoryCard from "../card/historyCard";
 import ConsultationModal from "../modal/consultationModal";
 import Image from "next/image";
 import { getPetById } from "@/services/pet"; 
-import { getAppointments, getAppointmentById } from "@/services/appointment"; // Adicionado getAppById
+import { getAppointments, getAppointmentById } from "@/services/appointment"; 
 import gatoImg from '../../../src/assets/cat.svg';
 import cachorroImg from '../../../src/assets/doggy.png';
 import Arrow from "../../../src/assets/arrow_back_new.svg";
