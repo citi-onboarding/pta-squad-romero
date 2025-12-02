@@ -57,7 +57,7 @@ export default function ServicePage() {
   const fetchData = async () => {
     try {
       // Fetch all Appointments.
-      const appointments = await getAppointments();
+      const appointments = (await getAppointments()) || [];
       // Fetch Pet data for each appointment
       const combinedDataPromises = appointments.map(
         async (appointment: any) => {
@@ -80,7 +80,7 @@ export default function ServicePage() {
       const combinedData = await Promise.all(combinedDataPromises);
       setAllAppointments(combinedData);
     } catch (error) {
-      console.error( "ERROR during fetchData:",error);
+      console.error("ERROR during fetchData:", error);
       setAllAppointments([]);
     }
   };
@@ -144,11 +144,12 @@ export default function ServicePage() {
       <Header />
       <div className="px-10 py-6">
         <div className="max-w-screen-2xl mx-auto w-full px-8 py-4">
-          <h1 className="text-4xl font-bold gap-4 flex items-center mt-4">
-            <ChevronLeft className="inline-block text-gray-500 cursor-pointer" />
-            Atendimento
-          </h1>
-
+          <Link href={`/register`}>
+            <h1 className="text-4xl font-bold gap-4 flex items-center mt-4">
+              <ChevronLeft className="inline-block text-gray-500 cursor-pointer" />
+              Atendimento
+            </h1>
+          </Link>
           <div className="mt-6">
             <h2 className="text-lg font-medium text-gray-800">
               Qual o médico?
@@ -274,18 +275,19 @@ export default function ServicePage() {
           {appointmentsToShow.length > 0 ? (
             appointmentsToShow.map((appointment) => {
               // Turn appointmentDate (from DB) into Object
-              const appointmentDateObject = parseDate( appointment.appointmentDate );
+              const appointmentDateObject = parseDate(
+                appointment.appointmentDate
+              );
               // Format Date
               const displayDate = formatDisplayDate(appointmentDateObject);
               // Checks Status
               const appointmentStatus =
-                appointmentDateObject.setHours(0, 0, 0, 0) >=
-                today.getTime()
+                appointmentDateObject.setHours(0, 0, 0, 0) >= today.getTime()
                   ? "present"
                   : "past";
 
               return (
-                <Link href={`/detailing[id]`}>
+                <Link href={`details/${appointment.id}`}>
                   <PetCard
                     key={appointment.id}
                     appointmentDate={displayDate}
