@@ -58,6 +58,7 @@ export default function ServicePage() {
     try {
       // Fetch all Appointments.
       const appointments = (await getAppointments()) || [];
+      console.log(appointments[1]);
       // Fetch Pet data for each appointment
       const combinedDataPromises = appointments.map(
         async (appointment: any) => {

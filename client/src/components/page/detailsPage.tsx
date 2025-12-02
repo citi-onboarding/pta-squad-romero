@@ -6,7 +6,7 @@ import HistoryCard from "../card/historyCard";
 import ConsultationModal from "../modal/consultationModal";
 import Image from "next/image";
 import { getPetById } from "@/services/pet"; 
-import { getAppointments, getAppointmentById } from "@/services/appointment"; 
+import { getAppointments, getAppointmentById, createAppointment } from "@/services/appointment"; 
 import gatoImg from '../../../src/assets/cat.svg';
 import cachorroImg from '../../../src/assets/doggy.png';
 import Arrow from "../../../src/assets/arrow_back_new.svg";
@@ -32,6 +32,14 @@ interface AppointmentData {
     doctorName: string;
     problemDescription: string;
 }
+interface ConsultationFormValues {
+  consultationType: string;
+  doctorName: string;
+  date: string;
+  time: string;
+  problemDescription: string;
+}
+
 // appointmentId as parameter in URL
 export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     const router = useRouter();
@@ -84,6 +92,39 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     const handleHistoryCardClick = (appointment: AppointmentData) => {
         setDisplayedAppointment(appointment);
     };
+    // Function to deal with a creation of new appointment from the modal
+    const handleNewAppointmentSubmit = async (data: ConsultationFormValues) => {
+    const petId = displayedAppointment?.petId; 
+    if (!petId) {
+        alert("Erro: ID do pet não encontrado para criar o agendamento.");
+        console.error("petId não encontrado, displayedAppointment:", displayedAppointment);
+        return;
+    }
+    try {
+        // Data to create new appointment with the Pet Id
+        const newAppointmentData = {
+            petId: petId,
+            appointmentType: data.consultationType,
+            doctorName: data.doctorName,
+            appointmentDate: data.date, 
+            appointmentTime: data.time, 
+            problemDescription: data.problemDescription,
+        };
+        // Create new appointment
+        const createdAppointment = await createAppointment(newAppointmentData);
+        if (createdAppointment) {
+            alert("Novo agendamento criado com sucesso!");
+            // Insert on Appointment array
+            setAllPetAppointments((prevAppointments) => [
+                ...prevAppointments,
+                createdAppointment as AppointmentData, 
+            ]);
+        }
+    } catch (error) {
+        console.error("Erro ao realizar novo agendamento:", error);
+        alert("Ocorreu um erro inesperado ao tentar agendar. Verifique o console.");
+    }
+};
 
     const now = new Date();
     const historyList = allPetAppointments
@@ -179,7 +220,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                     {/* Button to open modal */}
                     <div className="flex flex-col items-center mt-5 w-full border border-gray-300 rounded-2xl p-4 shadow-sm">
                         <p className="font-bold text-[15px] mb-2">Deseja realizar outra consulta?</p>
-                        <ConsultationModal>
+                        <ConsultationModal onDataSubmit={handleNewAppointmentSubmit}>
                             <button className="bg-[#50E678] text-white rounded-full w-full py-2 flex flex-row items-center justify-center gap-2 shadow-sm hover:bg-[#43C268] transition-colors">
                                 <Image src={Check} alt="Check" className="brightness-0 invert"/>
                                 Agendamento
