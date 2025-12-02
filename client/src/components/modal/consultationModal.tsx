@@ -60,6 +60,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     
     if (onDataSubmit) {
       onDataSubmit(data);
+      alert(onDataSubmit);
     }
     
     setOpen(false); 

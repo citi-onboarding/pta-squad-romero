@@ -7,8 +7,7 @@ import ConsultationModal from "../modal/consultationModal";
 import Image from "next/image";
 import { getPetById } from "@/services/pet"; 
 import { getAppointments, getAppointmentById, createAppointment } from "@/services/appointment"; 
-import gatoImg from '../../../src/assets/cat.svg';
-import cachorroImg from '../../../src/assets/doggy.png';
+import { dog, sheep, horse, cow, cat, pig} from "../../assets"
 import Arrow from "../../../src/assets/arrow_back_new.svg";
 import Check from "../../../src/assets/task_alt.svg";
 
@@ -94,37 +93,37 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     };
     // Function to deal with a creation of new appointment from the modal
     const handleNewAppointmentSubmit = async (data: ConsultationFormValues) => {
-    const petId = displayedAppointment?.petId; 
-    if (!petId) {
-        alert("Erro: ID do pet não encontrado para criar o agendamento.");
-        console.error("petId não encontrado, displayedAppointment:", displayedAppointment);
-        return;
-    }
-    try {
-        // Data to create new appointment with the Pet Id
-        const newAppointmentData = {
-            petId: petId,
-            appointmentType: data.consultationType,
-            doctorName: data.doctorName,
-            appointmentDate: data.date, 
-            appointmentTime: data.time, 
-            problemDescription: data.problemDescription,
-        };
-        // Create new appointment
-        const createdAppointment = await createAppointment(newAppointmentData);
-        if (createdAppointment) {
-            alert("Novo agendamento criado com sucesso!");
-            // Insert on Appointment array
-            setAllPetAppointments((prevAppointments) => [
-                ...prevAppointments,
-                createdAppointment as AppointmentData, 
-            ]);
+        const petId = displayedAppointment?.petId; 
+        if (!petId) {
+            alert("Erro: ID do pet não encontrado para criar o agendamento.");
+            console.error("petId não encontrado, displayedAppointment:", displayedAppointment);
+            return;
         }
-    } catch (error) {
-        console.error("Erro ao realizar novo agendamento:", error);
-        alert("Ocorreu um erro inesperado ao tentar agendar. Verifique o console.");
-    }
-};
+        try {
+            // Data to create new appointment with the Pet Id
+            const newAppointmentData = {
+                petId: petId,
+                appointmentType: data.consultationType,
+                doctorName: data.doctorName,
+                appointmentDate: data.date, 
+                appointmentTime: data.time, 
+                problemDescription: data.problemDescription,
+            };
+            // Create new appointment
+            const createdAppointment = await createAppointment(newAppointmentData);
+            if (createdAppointment) {
+                alert("Novo agendamento criado com sucesso!");
+                // Insert on Appointment array
+                setAllPetAppointments((prevAppointments) => [
+                    ...prevAppointments,
+                    createdAppointment as AppointmentData, 
+                ]);
+            }
+        } catch (error) {
+            console.error("Erro ao realizar novo agendamento:", error);
+            alert("Ocorreu um erro inesperado ao tentar agendar. Verifique o console.");
+        }
+    };
 
     const now = new Date();
     const historyList = allPetAppointments
@@ -142,11 +141,40 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
             return dateB.getTime() - dateA.getTime();
         });
 
-    const petImage = petData?.petSpecies?.toLowerCase() === "gato" ? gatoImg : cachorroImg;
+    function species (petSpecies : string) {
+    switch (petSpecies) {  // switch case with the corresponding pet image depending on the species Prop
+        case "cat": 
+            return cat;
+        case "sheep": 
+            return sheep;
+        case "horse":
+            return horse;
+        case "cow":
+            return cow;
+        case "dog":
+            return dog;
+        case "pig":
+            return pig;
+        case "Gato": 
+            return cat;
+        case "Ovelha": 
+            return sheep;
+        case "Cavalo":
+            return horse;
+        case "Vaca":
+            return cow;
+        case "Cachorro":
+            return dog;
+        case "Porco":
+            return pig;
+        default:
+            return cat;
+            }
+        };
 
     const getAppointmentStyle = (type: string | undefined) => {
         switch (type) {
-            case "Vacinação":
+            case "Vacinacao":
                 return "bg-green-200";
             case "Primeira Consulta":
                 return "bg-blue-200";
@@ -189,7 +217,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                     <div className="flex flex-row gap-8 mt-4">
                         <div className="w-[150px] h-[180px] sm:w-[200px] sm:h-[250px] relative mt-4">
                             <Image
-                                src={petImage} 
+                                src={species(petData.petSpecies)} 
                                 alt={petData.petName}
                                 fill
                                 className="object-cover"
