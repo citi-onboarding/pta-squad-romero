@@ -26,6 +26,18 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, appointme
             return dog;
         case "pig":
             return pig;
+        case "Gato": 
+            return cat;
+        case "Ovelha": 
+            return sheep;
+        case "Cavalo":
+            return horse;
+        case "Vaca":
+            return cow;
+        case "Cachorro":
+            return dog;
+        case "Porco":
+            return pig;
         default:
             return cat;
             }
