@@ -48,7 +48,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
 
   
   const onSubmit = (data: ConsultationFormValues) => {
-    const alertMessage = `Confirm appointment details?\n
+    const alertMessage = `Appointment Details:\n
     Consultation Type: ${data.consultationType}\n
     Responsible Doctor: ${data.doctorName}\n
     Date: ${data.date}\n
@@ -60,7 +60,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
     
     if (onDataSubmit) {
       onDataSubmit(data);
-      alert(onDataSubmit);
+    
     }
     
     setOpen(false); 
