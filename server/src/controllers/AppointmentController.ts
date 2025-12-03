@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { Citi, Crud } from "../global"; 
 import { Prisma, appointmentTypes } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 class AppointmentController implements Crud {
   constructor(private readonly citi = new Citi("Appointment")) {}
@@ -51,10 +54,18 @@ class AppointmentController implements Crud {
 
   // GET /appointments
   get = async (request: Request, response: Response): Promise<Response> => {
-    // Obtém todos os valores via Citi
-    const { httpStatus, values } = await this.citi.getAll();
+    try {
+      const appointments = await prisma.appointment.findMany({
+        include: {
+          pet: true // include pet too
+        }
+      });
 
-    return response.status(httpStatus).send(values);
+      return response.status(200).send(appointments);
+    } catch (error) {
+      return response.status(500).send({ message: "Erro ao buscar agendamentos."});
+    }
+
   };
   
   // GET /appointments/:id
