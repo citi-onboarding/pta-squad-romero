@@ -227,7 +227,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                         <div className="flex flex-col justify-between">
                             <div className="justify-start">
                                 <p className="font-bold text-[16px] mt-4">{petData.petName}</p>
-                                <p>{petData.petAge || 'Idade desconhecida'}</p> 
+                                <p>{petData.petAge ? `${petData.petAge} anos` : 'Idade desconhecida'}</p> 
                             </div>
                             <div className="justify-end">
                                 <p>{petData.ownerName}</p>
