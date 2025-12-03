@@ -175,15 +175,15 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     const getAppointmentStyle = (type: string | undefined) => {
         switch (type) {
             case "Vacinacao":
-                return "bg-green-200";
+                return "bg-[#AAE1FF]";
             case "Primeira Consulta":
-                return "bg-blue-200";
+                return "bg-[#BFB5FF]";
             case "Retorno":
-                return "bg-orange-200";
+                return "bg-[#FF6419]";
             case "Checkup":
-                return "bg-yellow-200"
+                return "bg-[#9CFF95]"
             default:
-                return "bg-gray-100";
+                return "bg-[#BFB5FF]";
             }
     };
 
