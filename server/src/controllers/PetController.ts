@@ -20,12 +20,22 @@ class PetController implements Crud {
         );
         if (isAnyUndefined) return response.status(400).send(); // if undefined, error 400
 
-        // Create pet
-        const newPet = {petName, ownerName, petAge, petSpecies};
-        // Send to database
-        const {httpStatus, message} = await this.citi.insertIntoDatabase(newPet);
-        // Return the message
-        return response.status(httpStatus).send({message});
+        try {
+            const newPet = await prisma.pet.create({
+                data: {
+                    petName,
+                    ownerName,
+                    petAge: Number(petAge),
+                    petSpecies
+                }
+            })
+        
+            // Return the message
+            return response.status(201).send(newPet);
+        } catch (error) {
+            console.error(error);
+            return response.status(500).send({ message: "Erro ao criar Pet no banco."})
+        }
     };
 
     // Get all the pets
