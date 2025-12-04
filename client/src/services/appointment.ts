@@ -49,3 +49,14 @@ export async function updateAppointment(id: number, updateData: any) {
         return null;
     }
 }
+
+
+export async function sendAppointmentConfirmation(data: any) {
+    try {
+        const response = await api.post('/mail', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending email', error);
+        throw new Error('Falha na comunicação com o serviço de e-mail.');
+    }
+}
