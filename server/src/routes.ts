@@ -2,7 +2,6 @@ import express from "express";
 import userController from "./controllers/UserController";
 import appointmentController from "./controllers/AppointmentController";
 import petController from "./controllers/PetController";
-import { Router } from "express";
 import { sendMail } from "./controllers/mailController";
 
 
@@ -25,7 +24,7 @@ routes.get("/pet/:id", petController.findPetById);
 routes.delete("/pet/:id", petController.delete);
 routes.patch("/pet/:id", petController.update);
 
-routes.post("/", sendMail);
+routes.post("/mail", sendMail);
 
 
 export default routes;

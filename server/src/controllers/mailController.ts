@@ -1,4 +1,5 @@
 import { MailHandler } from "src/service";
+import { MailTemplate } from "src/service";
 import { Request, Response } from "express";
 
 export async function sendMail(req: Request, res: Response) {
@@ -9,7 +10,7 @@ export async function sendMail(req: Request, res: Response) {
             userEmail,
             userName,
             subjectText,
-            html: `<h1>Hello ${userName}</h1>`
+            html: MailTemplate('xhsbsb', 'jsxvsjxvj', 'dhdscbvxsc', 'ajhdhd')
         }
 
         const mailResponse = await MailHandler(emailConfig);
