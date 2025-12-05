@@ -82,13 +82,13 @@ export default function Register() {
     return(
         <>
             <Header />
-            <div className="flex flex-col justify-center pb-4 px-6 max-w-6xl mx-auto">
-                <div className="flex flex-row items-center gap-2">
+            <div className="flex flex-col pb-12 py-10 px-8 max-w-screen-2xl w-full mx-auto">
+                <div className="flex flex-row items-center gap-4 mb-4">
                     <button type="button" onClick={() => router.push('/appointment')} className="mt-4 text-blue-500 mb-4">
                         <Image src={Arrow} alt="Voltar" />
                     </button>
                     
-                    <h1 className="mb-1 text-[48px] font-bold">
+                    <h1 className="text-4xl font-bold">
                     Cadastro
                     </h1>
                 </div>

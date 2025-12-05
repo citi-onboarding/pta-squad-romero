@@ -13,6 +13,9 @@ import { DateRange } from "react-day-picker";
 import Link from "next/link";
 import { getAppointments } from "@/services/appointment";
 import { getPetById } from "@/services/pet";
+import Arrow from '@/assets/arrow_back_new.svg'
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 // Function to format Data from yyyy-mm-dd to dd/mm if the year is the current or dd/mm/aaaa if is not the current year
 const formatDisplayDate = (dateObject: Date): string => {
   const currentYear = new Date().getFullYear();
@@ -49,6 +52,7 @@ export default function ServicePage() {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [searchText, setSearchText] = useState("");
   const [appliedSearch, setAppliedSearch] = useState("");
+  const router = useRouter();
 
   // Today's Date
   const today = new Date();
@@ -145,12 +149,17 @@ export default function ServicePage() {
       <Header />
       <div className="px-10 py-6">
         <div className="max-w-screen-2xl mx-auto w-full px-8 py-4">
-          <Link href={`/register`}>
-            <h1 className="text-4xl font-bold gap-4 flex items-center mt-4">
-              <ChevronLeft className="inline-block text-gray-500 cursor-pointer" />
+
+          <div className="flex flex-row items-center gap-4 mb-4">
+            <button type="button" onClick={() => router.push('/register')} className="mt-4 text-blue-500 mb-4">
+              <Image src={Arrow} alt="Voltar" />
+            </button>
+            
+            <h1 className="text-4xl font-bold">
               Atendimento
             </h1>
-          </Link>
+          </div>
+          
           <div className="mt-6">
             <h2 className="text-lg font-medium text-gray-800">
               Qual o médico?
