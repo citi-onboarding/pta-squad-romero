@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 19,
   },
   cardListContainer: {
-    paddingBottom: 40,
+    paddingBottom: 75,
     alignItems: "center",
   },
   cardSpacing: {
