@@ -199,13 +199,13 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     return (
         <>
         <Header />
-        <div className="flex flex-col justify-center pb-4 px-6 py-6 max-w-6xl mx-auto">
+        <div className="flex flex-col justify-center pb-4 px-6 py-12 max-w-7xl mx-auto">
             {/* Button and Title */}
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center gap-4 mb-6">
                 <button type="button" onClick={() => router.push("/appointment")}>
                     <Image src={Arrow} alt="Back arrow" />
                 </button>
-                <h1 className="mb-1 text-[32px] sm:text-[40px] md:text-[48px] font-bold">Detalhes da Consulta</h1>
+                <h1 className="mb-1 text-4xl font-bold">Detalhes da Consulta</h1>
             </div>
 
             {/* Pacient and History */}
