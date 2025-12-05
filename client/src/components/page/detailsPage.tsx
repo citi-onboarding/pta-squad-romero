@@ -172,11 +172,22 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
             }
         };
 
+    const formatAppointmentType = (type: string | undefined) => {
+        if (!type) return "-";
+        switch (type) {
+            case "PrimeiraConsulta": return "Primeira Consulta";
+            case "Vacinacao": return "Vacinação";
+            case "Checkup": return "Check-up";
+            case "Retorno": return "Retorno";
+            default: return type; // Se não achar, devolve o original
+        }
+    };
+
     const getAppointmentStyle = (type: string | undefined) => {
         switch (type) {
             case "Vacinacao":
                 return "bg-[#AAE1FF]";
-            case "Primeira Consulta":
+            case "PrimeiraConsulta":
                 return "bg-[#BFB5FF]";
             case "Retorno":
                 return "bg-[#FF6419]";
@@ -243,7 +254,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                     {/* Appointment Type */}
                     <div className="mt-4 mr-20 flex flex-row items-center gap-6">
                         <p className="font-bold text-[15px]">Tipo de Consulta:</p>
-                        <p className={`text-[15px] px-2 py-1 rounded-md ${getAppointmentStyle(displayedAppointment.appointmentType)}`}>{displayedAppointment.appointmentType || "-"}</p>
+                        <p className={`text-[15px] px-2 py-1 rounded-md ${getAppointmentStyle(displayedAppointment.appointmentType)}`}>{formatAppointmentType(displayedAppointment.appointmentType)}</p>
                     </div>
                     {/* Button to open modal */}
                     <div className="flex flex-col items-center mt-5 w-full border border-gray-300 rounded-2xl p-4 shadow-sm">
@@ -271,7 +282,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                                 .toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
                                 appointmentTime={appointment.appointmentTime}
                                 doctorName={appointment.doctorName}
-                                appointmentType={appointment.appointmentType}
+                                appointmentType={formatAppointmentType(appointment.appointmentType)}
                                 onClick={() => handleHistoryCardClick(appointment)} 
                             />
                             ))

@@ -16,6 +16,16 @@ import { getPetById } from "@/services/pet";
 import Arrow from '@/assets/arrow_back_new.svg'
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
+const formatAppointmentType = (type: string) => {
+  switch (type) {
+    case "PrimeiraConsulta": return "Primeira Consulta";
+    case "Vacinacao": return "Vacinação";
+    case "Checkup": return "Check-up";
+    case "Retorno": return "Retorno";
+    default: return type;
+  }
+};
 // Function to format Data from yyyy-mm-dd to dd/mm if the year is the current or dd/mm/aaaa if is not the current year
 const formatDisplayDate = (dateObject: Date): string => {
   const currentYear = new Date().getFullYear();
@@ -303,7 +313,7 @@ export default function ServicePage() {
                     appointmentDate={displayDate}
                     appointmentTime={appointment.appointmentTime}
                     doctorName={appointment.doctorName}
-                    appointmentType={appointment.appointmentType}
+                    appointmentType={formatAppointmentType(appointment.appointmentType)}
                     petSpecies={appointment.petSpecies}
                     petName={appointment.petName}
                     ownerName={appointment.ownerName}
