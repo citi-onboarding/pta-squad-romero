@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useState } from 'react';
 import Header from "@/components/header/header";
 import { useForm } from "react-hook-form";
 import { RegisterModal } from '@/components/modal/RegisterModal';
@@ -13,6 +13,9 @@ import porcoImg from '../../../src/assets/pig.svg';
 import vacaImg from '../../../src/assets/cow.svg';
 import cachorroImg from '../../../src/assets/doggy.png';
 import Arrow from '@/assets/arrow_back_new.svg'
+// Services
+import { createPet } from '@/services/pet';
+import { createAppointment } from '@/services/appointment';
 
 const animalOptions = [
     { value: "Ovelha", label: "Ovelha", img: ovelhaImg },
@@ -28,26 +31,53 @@ export default function Register() {
     const router = useRouter();
     const [appData, setAppData] = React.useState<any>();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false); // State for loading
 
-    const onSubmit = (data : any) => { // Alert message
-        const alertMessage = ` 
-        🐾 PACIENTE
-        Nome: ${data.petName}
-        Espécie: ${data.petSpecies}
-        Idade: ${data.petAge}
-        👤 TUTOR
-        Nome: ${data.ownerName}
-        🏥 CONSULTA
-        Tipo: ${data.appointmentType}
-        Médico: ${data.doctorName}
-        Data: ${data.appointmentDate} às ${data.appointmentTime}
-        📝 PROBLEMA
-        ${data.problemDescription}
-                `;
-                
-        alert(alertMessage); // Show alert
-        setAppData(data)
-        setIsModalOpen(true); // Open modal
+    const onSubmit = async (data : any) => {
+        setIsLoading(true); // When user click, define as true showing that the process has started
+
+        try {
+            // Pet data
+            const petPayLoad = {
+                petName: data.petName,
+                ownerName: data.ownerName,
+                petAge: Number(data.petAge),
+                petSpecies: data.petSpecies
+            }
+            // Create pet
+            
+            const createdPet = await createPet(petPayLoad)
+            console.log("Pet Criado:", petPayLoad);
+
+            if (!createdPet || !createdPet.id) {
+                throw new Error("Falha ao criar o Pet. O ID não retornou.")
+            }
+            // Appointment data
+            const appointmentPayLoad = {
+                petId: createdPet.id,
+                appointmentType: data.appointmentType,
+                doctorName: data.doctorName,
+                appointmentDate: data.appointmentDate,
+                appointmentTime: data.appointmentTime,
+                problemDescription: data.problemDescription
+            }
+            // Create Appointment
+            console.log("Enviando Consulta:", appointmentPayLoad)
+            const createdAppointment = await createAppointment(appointmentPayLoad)
+
+            if (createdAppointment) {
+                setIsModalOpen(true); // Sucess
+                setAppData(data)
+            } else {
+                throw new Error("Falha ao criar a Consulta."); // Error
+            }
+            
+        } catch (error) {
+            console.error("Erro no cadastro:", error);
+            alert("Ocorreu um erro ao salvar. Verifique o console (F12) para detalhes.")
+        } finally {
+            setIsLoading(false); // Show that process has ended
+        }
     };
 
     return(
@@ -132,8 +162,8 @@ export default function Register() {
                         {errors.problemDescription && <span className="text-red-500 text-xs font-normal">{errors.problemDescription.message as string}</span>}
                     </div>
                     <div className="text-right">
-                        <button type="submit" className="w-[205px] h-12 rounded-3xl bg-[#50E678] shadow-md border border-input inline-flex items-center justify-center text-white font-medium transition-colors hover:bg-[#43C268]">
-                            Finalizar Cadastro
+                        <button type="submit" disabled={isLoading} className={`w-[205px] h-12 rounded-3xl shadow-md border border-input inline-flex items-center justify-center text-white font-medium transition-colors ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#50E678] hover:bg-[#43C268]'}`}>
+                            {isLoading ? 'Salvando' : 'Finalizar Cadastro'}
                         </button>
                     </div>
                 </form>

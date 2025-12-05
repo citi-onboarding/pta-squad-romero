@@ -1,19 +1,11 @@
 'use client'; 
 import React from 'react';
 import Image from "next/image";
-
-// Componentes do shadcn/ui baseados em Radix UI:
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
-// Hook para gerenciamento de estado e validação do formulário.
 import { useForm } from "react-hook-form";
-
-// Importações de assets (logotipo).
 import { LogoPet } from '@/assets'; 
 
-/**
- * Define a estrutura de dados (tipagem) esperada dos campos do formulário.
- */
+
 interface ConsultationFormValues {
   consultationType: string;
   doctorName: string;
@@ -22,29 +14,20 @@ interface ConsultationFormValues {
   problemDescription: string;
 }
 
-/**
- * Propriedades do Modal.
- */
 interface ConsultationModalProps {
-  // O elemento que atua como o botão de abertura. Deve ser passado como filho (children).
   children: React.ReactNode; 
-  // Função opcional para o componente pai receber os dados validados após a submissão.
   onDataSubmit?: (data: ConsultationFormValues) => void;
 }
 
-/**
- * Componente funcional do Modal de Cadastro de Consulta.
- * Gerencia seu próprio estado
- */
 const ConsultationModal: React.FC<ConsultationModalProps> = ({ 
     children, 
     onDataSubmit
 }) => {
   
-  // Estado local para controlar se o modal está aberto (true) ou fechado (false).
+  // Modal state control
   const [open, setOpen] = React.useState(false);
 
-  // Inicializa o React Hook Form.
+  // React Hook Form initialization
   const form = useForm<ConsultationFormValues>({
     defaultValues: {
       consultationType: "",
@@ -53,61 +36,56 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
       time: "",
       problemDescription: ""
     },
-    mode: "onSubmit", // Validação ocorre apenas no envio.
+    mode: "onSubmit", 
   });
   
   const { 
-    register, // Função para registrar inputs no RHF.
+    register, 
     handleSubmit, 
-    formState: { errors }, // Objeto que contém os erros de validação.
-    reset // Função para limpar os campos.
+    formState: { errors }, 
+    reset // Cleans form fields
   } = form;
 
-  /**
-   * Lógica executada após o formulário passar na validação.
-   */
+  
   const onSubmit = (data: ConsultationFormValues) => {
-    const alertMessage = `Confirma os dados da consulta?\n
-    Tipo de consulta: ${data.consultationType}\n
-    Médico Responsável: ${data.doctorName}\n
-    Data do atendimento: ${data.date}\n
-    Horário do atendimento: ${data.time}\n
-    Descrição do problema: ${data.problemDescription}`;
+    const alertMessage = `Appointment Details:\n
+    Consultation Type: ${data.consultationType}\n
+    Responsible Doctor: ${data.doctorName}\n
+    Date: ${data.date}\n
+    Time: ${data.time}\n
+    Problem Description: ${data.problemDescription}`;
 
-    alert(alertMessage); // Alerta de confirmação.
+    alert(alertMessage);
     
-    // Chama a função de callback no componente pai.
+    
     if (onDataSubmit) {
       onDataSubmit(data);
+    
     }
     
-    setOpen(false); // Fecha o modal.
-    reset(); // Limpa os campos.
+    setOpen(false); 
+    reset(); 
   };
   
-  /**
-   * Função chamada pelo Dialog em qualquer tentativa de fechar (ESC, Overlay, botão 'X').
-   */
+
+   //Function called when the dialog attempts to close 
   const handleOpenChange = (newOpenState: boolean) => {
-    // Se o estado estiver mudando para fechado (false), reseta o formulário.
+    // If state changes to closed (false), reset the form.
     if (!newOpenState) {
       reset();
     }
-    setOpen(newOpenState); // Atualiza o estado interno.
+    setOpen(newOpenState); 
   };
   
-  /**
-   * Função auxiliar para determinar a classe de borda com base no erro.
-   */
+  
+   // Helper function to determine the border class based on validation error.
   const getErrorClass = (fieldName: keyof ConsultationFormValues) => {
     return errors[fieldName] ? 'border-red-500' : 'border-gray-300';
   };
   
   return (
-    // Dialog: gerencia o estado 'open' e eventos de fechamento.
+    // Dialog component
     <Dialog open={open} onOpenChange={handleOpenChange}>
-        
-      {/* DialogTrigger: Usa o elemento 'children' (o botão passado) para abrir o modal. */}
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
@@ -122,29 +100,21 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
           border-none
         "
       >
-        
-        {/* Cabeçalho do Modal: Logo centralizada */}
         <header className="mb-10">
           <div className="flex justify-center">
             <Image 
                 src={LogoPet} 
-                alt="Logo CITi Pet" 
+                alt="CITi Pet Logo" 
             />
           </div>
         </header>
-
-        {/* Mensagem de instrução */}
         <p className="text-center text-base text-gray-800 mb-10">
           <b>O pet já está cadastrado no sistema!</b> Preencha os dados da <b>consulta</b>:
         </p>
-
-        {/* Formulário com RHF e Validação */}
         <form onSubmit={handleSubmit(onSubmit)}>
-
-          {/* Layout responsivo com grid de 2 colunas em telas maiores */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6 mb-5">
 
-            {/* Campo 1: Tipo de consulta  */}
+            {/*  Consultation Type */}
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Tipo de consulta</label>
               <select
@@ -154,17 +124,17 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                             h-12`}
               >
                 <option value="" disabled hidden>Selecione aqui</option> 
-                <option value="checkup">Checkup</option>
-                <option value="vacinacao">Vacinação</option>
-                <option value="primeiraConsulta">Primeira Consulta</option>
-                <option value="retorno">Retorno</option>
+                <option value="Checkup">Checkup</option> {/* Recommended to match details page value */}
+                <option value="Vacinação">Vacinação</option>
+                <option value="Primeira Consulta">Primeira Consulta</option>
+                <option value="Retorno">Retorno</option>
               </select>
               {errors.consultationType && (
                 <p className="text-sm text-red-500 mt-1">{errors.consultationType.message}</p>
               )}
             </div>
 
-            {/* Campo 2: Médico Responsável */}
+            {/* Doctor */}
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Médico Responsável</label>
               <input
@@ -186,7 +156,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
               )}
             </div>
 
-            {/* Campo 3: Data do atendimento  */}
+            {/* Date */}
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Data do atendimento</label>
               <input
@@ -201,7 +171,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
               )}
             </div>
 
-            {/* Campo 4: Horário do atendimento */}
+            {/* Field 4: Time */}
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Horário do atendimento</label>
               <input
@@ -217,8 +187,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
             </div>
 
           </div>
-
-          {/* Campo 5: Descricao do Problema */}
+          {/*Problem Description */}
             <div>
               <label className="block text-base font-bold text-gray-900 mb-2">Descrição do Problema</label>
               <textarea
@@ -238,8 +207,7 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 <p className="text-sm text-red-500">{errors.problemDescription.message}</p>
               )}
             </div>
-          
-          {/* Botão de Finalizar Cadastro */}
+          {/*Submit Button */}
           <button 
             type="submit" 
             className={`mt-4 w-full py-3 text-white font-semibold rounded-3xl transition duration-200 
@@ -248,7 +216,6 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
             Finalizar cadastro
           </button>
         </form>
-
       </DialogContent>
     </Dialog>
   );

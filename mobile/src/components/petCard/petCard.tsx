@@ -82,7 +82,7 @@ export function PetCard({
 
 const styles = StyleSheet.create({
   cardContainerMobile: {
-    width: 358,
+    width: "100%",
     height: 122,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 24,
     alignItems: "center",
-    margin: 10,
+    marginBottom: 14,
   },
 
   dateTimeContainer: {

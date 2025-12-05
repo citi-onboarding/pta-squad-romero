@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import {
   ScrollView,
   View,
@@ -6,88 +6,66 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  RefreshControl, // Refresh screen
+  ActivityIndicator // Show loading icon
 } from "react-native";
 import { PetCard } from "../src/components/petCard/petCard";
 import { logoCiti } from "@assets";
+import { getAppointments } from "../src/services/appointment";
 
-interface Appointment {
+interface AppointmentDB { // interface of data base
   id: number;
   appointmentDate: string;
   appointmentTime: string;
   doctorName: string;
-  appointmentType: "Retorno" | "Vacinacao" | "Checkup" | "Primeira Consulta";
-  petSpecies: "cat" | "dog" | "horse" | "cow" | "pig" | "sheep";
-  petName: string;
-  ownerName: string;
+  appointmentType: string;
+  pet: {
+    petName: string;
+    ownerName: string;
+    petSpecies: string;}
 }
 
-const mockAppointments: Appointment[] = [
-  {
-    id: 1,
-    appointmentDate: "18/02",
-    appointmentTime: "10:00",
-    doctorName: "Dr. José Carlos",
-    appointmentType: "Primeira Consulta",
-    petSpecies: "cat",
-    petName: "Luna",
-    ownerName: "João Alves",
-  },
-  {
-    id: 2,
-    appointmentDate: "18/02",
-    appointmentTime: "11:30",
-    doctorName: "Dr. Ana Paula",
-    appointmentType: "Vacinacao",
-    petSpecies: "dog",
-    petName: "Rex",
-    ownerName: "Fernanda Costa",
-  },
-  {
-    id: 3,
-    appointmentDate: "18/02",
-    appointmentTime: "14:00",
-    doctorName: "Dr. Bruno Lima",
-    appointmentType: "Checkup",
-    petSpecies: "horse",
-    petName: "Estrela",
-    ownerName: "Rafaela Mendes",
-  },
-  {
-    id: 4,
-    appointmentDate: "18/02",
-    appointmentTime: "17:30",
-    doctorName: "Dr. José Carlos",
-    appointmentType: "Retorno",
-    petSpecies: "pig",
-    petName: "Bacon",
-    ownerName: "Pedro Souza",
-  },
-  {
-    id: 5,
-    appointmentDate: "18/02",
-    appointmentTime: "20:00",
-    doctorName: "Dr. Ana Paula",
-    appointmentType: "Primeira Consulta",
-    petSpecies: "cow",
-    petName: "Mimosa",
-    ownerName: "Mariana Silva",
-  },
-  {
-    id: 6,
-    appointmentDate: "18/02",
-    appointmentTime: "22:30",
-    doctorName: "Dr. Bruno Lima",
-    appointmentType: "Vacinacao",
-    petSpecies: "sheep",
-    petName: "Dolly",
-    ownerName: "Lucas Ferreira",
-  },
-];
+// Translating images 
+const speciesMap: Record<string, string> = {
+  "Ovelha": "sheep",
+  "Gato": "cat",
+  "Porco": "pig",
+  "Vaca": "cow",
+  "Cavalo": "horse",
+  "Cachorro": "dog"
+};
 
 type FilterType = "all" | "morning" | "afternoon" | "night";
 
-export const App: React.FC = () => {
+export default function App() {
+  const [appointments, setAppointments] = useState<AppointmentDB[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
+
+  // Seach for data in backend
+  const fetchAppointments = async () => {
+    try {
+      const data = await getAppointments(); // Call API
+      setAppointments(data);
+    } catch (error) {
+      console.log("Erro ao buscar:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // Load when open app
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  // Function to pull to refresh
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchAppointments();
+    setRefreshing(false);
+  }, []);
 
   // Function to get Time on HH:MM Format
   const getHour = (time: string): number => {
@@ -98,27 +76,36 @@ export const App: React.FC = () => {
     }
   };
 
+  // Format date
+  const formatDate = (dateString: string) => {
+    // Transforms "2024-10-10..." to "10/10"
+    try {
+        const dateObj = new Date(dateString);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        return `${day}/${month}`;
+    } catch (e) { return dateString }
+  };
+
   // Filter
   const filteredAppointments = useMemo(() => {
-    if (activeFilter === "all") {
-      return mockAppointments;
+    // if no data, return nothing
+    if (!appointments) return [];
+
+    let list = appointments;
+    if (activeFilter !== "all") {
+      list = appointments.filter((app) => {
+        const hour = getHour(app.appointmentTime);
+        switch (activeFilter) {
+          case "morning": return hour >= 0 && hour <= 12;
+          case "afternoon": return hour > 12 && hour <= 18;
+          case "night": return hour > 18 && hour < 24;
+          default: return true;
+        }
+      });
     }
-
-    return mockAppointments.filter((appointment) => {
-      const hour = getHour(appointment.appointmentTime);
-
-      switch (activeFilter) {
-        case "morning":
-          return hour >= 0 && hour <= 12;
-        case "afternoon":
-          return hour > 12 && hour <= 18;
-        case "night":
-          return hour > 18 && hour < 24;
-        default:
-          return true;
-      }
-    });
-  }, [activeFilter]);
+    return list;
+  }, [activeFilter, appointments]);
 
   // Filter Button
   const FilterButton: React.FC<{
@@ -165,31 +152,46 @@ export const App: React.FC = () => {
         </View>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.cardListContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        {filteredAppointments.length > 0 ? (
-          filteredAppointments.map((app) => (
-            <View key={app.id} style={styles.cardSpacing}>
-              <PetCard
-                appointmentDate={app.appointmentDate}
-                appointmentTime={app.appointmentTime}
-                doctorName={app.doctorName}
-                appointmentType={app.appointmentType}
-                petSpecies={app.petSpecies}
-                petName={app.petName}
-                ownerName={app.ownerName}
-              />
-            </View>
-          ))
-        ) : (
-          <Text style={styles.emptyListText}>
-            Nenhum agendamento encontrado para este período.
-          </Text>
-        )}
-      </ScrollView>
+      {/* Loading logic */}
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+           <ActivityIndicator size="large" color="#50E678" />
+        </View>
+      ) : (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.cardListContainer}
+          showsVerticalScrollIndicator={false}
+          // Refresh
+          refreshControl={
+             <RefreshControl 
+                refreshing={refreshing} 
+                onRefresh={onRefresh} 
+                tintColor="#50E678"
+             />
+          }
+        >
+          {filteredAppointments.length > 0 ? (
+            filteredAppointments.map((app) => (
+              <View key={app.id} style={styles.cardSpacing}>
+                <PetCard
+                  appointmentDate={formatDate(app.appointmentDate)}
+                  appointmentTime={app.appointmentTime}
+                  doctorName={app.doctorName}
+                  appointmentType={app.appointmentType}
+                  petSpecies={speciesMap[app.pet?.petSpecies] || "cat"} // Security image
+                  petName={app.pet?.petName || "Desconhecido"}
+                  ownerName={app.pet?.ownerName || "Desconhecido"}
+                />
+              </View>
+            ))
+          ) : (
+            <Text style={styles.emptyListText}>
+              Nenhum agendamento encontrado para este período.
+            </Text>
+          )}
+        </ScrollView>
+      )}
       <View style={styles.footer} />
     </View>
   );
@@ -303,4 +305,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
