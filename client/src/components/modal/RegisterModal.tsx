@@ -8,16 +8,27 @@ import { Input } from "@/components/ui/input"
 import Image from "next/image";
 import { Button } from "../ui/button"
 import { LogoCITiPet } from "@/assets";
+import { sendAppointmentConfirmation } from "@/services/appointment";
+
+interface AppointmentData {
+    petName: string;
+    ownerName: string;
+    doctorName: string;
+    appointmentType: string;
+    appointmentDate: string; 
+    appointmentTime: string; 
+}
 
 interface RegisterModalProps {
     isOpen: boolean;
     setIsOpen: (open: boolean) => void;
+    appointmentData: AppointmentData | null;
 }
 
-export function RegisterModal({ isOpen, setIsOpen }: RegisterModalProps) {
+export function RegisterModal({ isOpen, setIsOpen, appointmentData }: RegisterModalProps) {
   const emailRef : any = useRef(); // By using ref, it gets the text inputed on the email field and tranfers it to the alert msg
   
-  const onSubmit = (e : React.FormEvent) => {
+  const onSubmit = async (e : React.FormEvent) => {
     e.preventDefault(); // if the email field is empty, it shows the adequate message
     e.stopPropagation();
 
@@ -25,10 +36,32 @@ export function RegisterModal({ isOpen, setIsOpen }: RegisterModalProps) {
 
     if (!email || email === "") {
       alert("Por favor, insira um email válido");
-  
-    } else {
-      alert(`Email enviado para: ${email}`);
-      setIsOpen(false); // close modal
+      return ;
+    } 
+
+    if (!appointmentData) {
+        alert("Erro: Dados da consulta não encontrados. Recarregue a página.");
+        return; 
+    }
+
+    const emailSubject = {
+        userEmail: email,
+        petName: appointmentData.petName,
+        ownerName: appointmentData.ownerName,
+        doctorName: appointmentData.doctorName,
+        appointmentType: appointmentData.appointmentType,
+        appointmentDate: appointmentData.appointmentDate,
+        appointmentTime: appointmentData.appointmentTime, 
+    };
+    
+    try {
+        await sendAppointmentConfirmation(emailSubject); 
+        alert(`E-mail de confirmação enviado para: ${email}`);
+        setIsOpen(false); 
+        
+    } catch (error) {
+        alert("Falha ao enviar e-mail de confirmação. Verifique o console.");
+        console.error("Erro ao enviar e-mail:", error);
     }
   };
 

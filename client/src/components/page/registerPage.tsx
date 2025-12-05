@@ -29,7 +29,7 @@ const animalOptions = [
 export default function Register() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const router = useRouter();
-
+    const [appData, setAppData] = React.useState<any>();
     const [isModalOpen, setIsModalOpen] = React.useState(false);
     const [isLoading, setIsLoading] = useState(false); // State for loading
 
@@ -67,6 +67,7 @@ export default function Register() {
 
             if (createdAppointment) {
                 setIsModalOpen(true); // Sucess
+                setAppData(data)
             } else {
                 throw new Error("Falha ao criar a Consulta."); // Error
             }
@@ -167,7 +168,7 @@ export default function Register() {
                     </div>
                 </form>
                 {/* Register modal */}
-                <RegisterModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} />
+                <RegisterModal isOpen={isModalOpen} setIsOpen={setIsModalOpen} appointmentData={appData}/>
             </div>
         </>
     )
