@@ -124,9 +124,9 @@ const ConsultationModal: React.FC<ConsultationModalProps> = ({
                             h-12`}
               >
                 <option value="" disabled hidden>Selecione aqui</option> 
-                <option value="Checkup">Checkup</option> {/* Recommended to match details page value */}
-                <option value="Vacinação">Vacinação</option>
-                <option value="Primeira Consulta">Primeira Consulta</option>
+                <option value="Checkup">Checkup</option>
+                <option value="Vacinacao">Vacinação</option>
+                <option value="PrimeiraConsulta">Primeira Consulta</option>
                 <option value="Retorno">Retorno</option>
               </select>
               {errors.consultationType && (
