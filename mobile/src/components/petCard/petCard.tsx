@@ -11,6 +11,13 @@ type Props = {
   ownerName: string;
 };
 
+const labelMap: Record<string, string> = {
+  "PrimeiraConsulta": "Primeira Consulta",
+  "Vacinacao": "Vacinação",
+  "Retorno": "Retorno",
+  "Checkup": "Check-up",
+};
+
 export function PetCard({
   appointmentDate,
   appointmentTime,
@@ -41,7 +48,7 @@ export function PetCard({
 
   function background(appointmentType: string): string {
     switch (appointmentType) {
-      case "Primeira Consulta":
+      case "PrimeiraConsulta":
         return "#BFB5FF";
       case "Vacinacao":
         return "#AAE1FF";
@@ -54,6 +61,7 @@ export function PetCard({
     }
   }
 
+  const formattedType = labelMap[appointmentType] || appointmentType;
   const backgroundColor = background(appointmentType);
   return (
     <View
@@ -65,15 +73,15 @@ export function PetCard({
         <Text style={styles.dateText}>{appointmentTime}</Text>
       </View>
       <View style={styles.petOwnDoc}>
-        <Text style={styles.petOwnerText}>
+        <Text style={styles.petOwnerText} numberOfLines={2} ellipsizeMode="tail">
           <Text style={styles.petNameText}>{petName}</Text> / {ownerName}
         </Text>
-        <Text style={styles.doctorNameText}>{doctorName}</Text>
+        <Text style={styles.doctorNameText} numberOfLines={1} ellipsizeMode="tail">{doctorName}</Text>
       </View>
       <View style={styles.petInfoContainer}>
         <Image source={species(petSpecies)} style={styles.petImage} />
         <View style={styles.appointmentTypeWrapper}>
-          <Text style={styles.appointmentTypeText}>{appointmentType}</Text>
+          <Text style={styles.appointmentTypeText} numberOfLines={1}>{formattedType}</Text>
         </View>
       </View>
     </View>
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
   },
 
   dateTimeContainer: {
+    width: 60,
     flexDirection: "column",
     gap: 8,
     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -116,6 +125,9 @@ const styles = StyleSheet.create({
   },
 
   petOwnDoc:{
+    flex: 1,
+    paddingHorizontal: 10,
+    justifyContent: "center",
     gap: 6,
   },
 
@@ -134,9 +146,11 @@ const styles = StyleSheet.create({
   },
 
   petInfoContainer: {
+    width: 105,
     gap: 8,
     flexDirection: "column",
     alignItems: "center",
+    minWidth: 60
   },
 
   petImage: {

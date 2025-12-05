@@ -172,18 +172,29 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
             }
         };
 
+    const formatAppointmentType = (type: string | undefined) => {
+        if (!type) return "-";
+        switch (type) {
+            case "PrimeiraConsulta": return "Primeira Consulta";
+            case "Vacinacao": return "Vacinação";
+            case "Checkup": return "Check-up";
+            case "Retorno": return "Retorno";
+            default: return type; // Se não achar, devolve o original
+        }
+    };
+
     const getAppointmentStyle = (type: string | undefined) => {
         switch (type) {
             case "Vacinacao":
-                return "bg-green-200";
-            case "Primeira Consulta":
-                return "bg-blue-200";
+                return "bg-[#AAE1FF]";
+            case "PrimeiraConsulta":
+                return "bg-[#BFB5FF]";
             case "Retorno":
-                return "bg-orange-200";
+                return "bg-[#FF6419]";
             case "Checkup":
-                return "bg-yellow-200"
+                return "bg-[#9CFF95]"
             default:
-                return "bg-gray-100";
+                return "bg-[#BFB5FF]";
             }
     };
 
@@ -199,13 +210,13 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     return (
         <>
         <Header />
-        <div className="flex flex-col justify-center pb-4 px-6 py-6 max-w-6xl mx-auto">
+        <div className="flex flex-col justify-center pb-4 px-6 py-12 max-w-7xl mx-auto">
             {/* Button and Title */}
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-row items-center gap-4 mb-6">
                 <button type="button" onClick={() => router.push("/appointment")}>
                     <Image src={Arrow} alt="Back arrow" />
                 </button>
-                <h1 className="mb-1 text-[32px] sm:text-[40px] md:text-[48px] font-bold">Detalhes da Consulta</h1>
+                <h1 className="mb-1 text-4xl font-bold">Detalhes da Consulta</h1>
             </div>
 
             {/* Pacient and History */}
@@ -243,7 +254,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                     {/* Appointment Type */}
                     <div className="mt-4 mr-20 flex flex-row items-center gap-6">
                         <p className="font-bold text-[15px]">Tipo de Consulta:</p>
-                        <p className={`text-[15px] px-2 py-1 rounded-md ${getAppointmentStyle(displayedAppointment.appointmentType)}`}>{displayedAppointment.appointmentType || "-"}</p>
+                        <p className={`text-[15px] px-2 py-1 rounded-md ${getAppointmentStyle(displayedAppointment.appointmentType)}`}>{formatAppointmentType(displayedAppointment.appointmentType)}</p>
                     </div>
                     {/* Button to open modal */}
                     <div className="flex flex-col items-center mt-5 w-full border border-gray-300 rounded-2xl p-4 shadow-sm">
@@ -271,7 +282,7 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
                                 .toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
                                 appointmentTime={appointment.appointmentTime}
                                 doctorName={appointment.doctorName}
-                                appointmentType={appointment.appointmentType}
+                                appointmentType={formatAppointmentType(appointment.appointmentType)}
                                 onClick={() => handleHistoryCardClick(appointment)} 
                             />
                             ))

@@ -1,3 +1,4 @@
+import { ca } from "date-fns/locale";
 import { dog, sheep, horse, cow, cat, pig, clock} from "../../assets"
 import Image from "next/image";
 type Props = {
@@ -42,6 +43,16 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, appointme
             return cat;
             }
         };
+
+    function formatAppointmentType(type: string) {
+        switch (type) {
+            case "PrimeiraConsulta": return "Primeira Consulta";
+            case "Vacinacao": return "Vacinação";
+            case "Checkup": return "Check-up";
+            case "Retorno": return "Retorno";
+            default: return type;
+        }
+    }
     
     function background(status: string, appointmentType: string): string {
 
@@ -50,13 +61,16 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, appointme
         }
 
         switch (appointmentType) {
+            case "PrimeiraConsulta":
             case "Primeira Consulta":
                 return "bg-[#BFB5FF]"; 
             case "Vacinacao":
+            case "Vacinação":
                 return "bg-[#AAE1FF]"; 
             case "Retorno":
                 return "bg-[#FF6419]"; 
             case "Checkup":
+            case "Check-up":
                 return "bg-[#9CFF95]"; 
             default:
                 return "bg-[#BFB5FF]";
@@ -76,7 +90,7 @@ export function PetCard({appointmentDate, appointmentTime, doctorName, appointme
         <div className="gap-2 flex flex-col items-center"> {/* div with the pet image and the type of appointment */}
             <Image src={species(petSpecies)} alt="animal" className="w-[69px] h-[70px]" />
             <div className="rounded-sm p-[6px] gap-2 bg-white bg-opacity-80">
-                <p className="text-xs text-center">{appointmentType}</p>
+                <p className="text-xs text-center">{formatAppointmentType(appointmentType)}</p>
             </div>
         </div>
     </div>
