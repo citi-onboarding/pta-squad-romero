@@ -46,8 +46,10 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
     const [petData, setPetData] = useState<PetData | null>(null);
     const [allPetAppointments, setAllPetAppointments] = useState<AppointmentData[]>([]); 
     const [displayedAppointment, setDisplayedAppointment] = useState<AppointmentData | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
     // Function to fetch Pet and Appointment Data
     const fetchData = async () => {
+        setIsLoading(true);
         try {
             const appointmentIdNumber = Number(appointmentId);
             // Get first appointment to show
@@ -71,6 +73,8 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
             setPetData(null);
             setAllPetAppointments([]);
             setDisplayedAppointment(null);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -198,13 +202,42 @@ export default function DetailsPage({ appointmentId }: DetailsPageProps) {
             }
     };
 
+    if (isLoading) {
+        return (
+            <>
+                <Header />
+                <div className="flex justify-center items-center h-[calc(100vh-100px)]">
+                    <div className="flex flex-col items-center gap-4">
+                        {/* Spinner simples com Tailwind */}
+                        <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin"></div>
+                        <p className="text-gray-500 text-lg animate-pulse">Carregando detalhes...</p>
+                    </div>
+                </div>
+            </>
+        );
+    }
+
     // If doesn't find, error message will show
     if (!displayedAppointment) {
-        return <div className="text-center p-10 text-xl text-red-500">Consulta {appointmentId} não encontrada.</div>;
+        return (
+             <>
+                <Header />
+                <div className="text-center p-10 text-xl text-red-500 mt-20">
+                    Consulta {appointmentId} não encontrada.
+                </div>
+            </>
+        );
     }
 
     if (!petData) {
-        return <div className="text-center p-10 text-xl text-red-500">Dados do paciente não encontrados.</div>;
+        return (
+            <>
+                <Header />
+                <div className="text-center p-10 text-xl text-red-500 mt-20">
+                    Dados do paciente não encontrados.
+                </div>
+            </>
+        );
     }
 
     return (
